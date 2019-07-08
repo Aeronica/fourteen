@@ -1,7 +1,12 @@
 package net.aeronica.mods.fourteen;
 
+import net.aeronica.mods.fourteen.blocks.ModBlocks;
+import net.aeronica.mods.fourteen.blocks.MusicBlock;
+import net.aeronica.mods.fourteen.items.MusicItem;
+import net.aeronica.mods.fourteen.setup.Setup;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.item.*;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
@@ -23,7 +28,9 @@ public class Fourteen
     public static final String MODID = "fourteen";
 
     // Directly reference a log4j logger.
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LogManager.getLogger(MODID);
+
+    public static Setup setup = new Setup();
 
     public static final String CHANNEL = MODID;
     private static final String PROTOCOL_VERSION = "1.0";
@@ -69,8 +76,17 @@ public class Fourteen
     public static class RegistryEvents {
         @SubscribeEvent
         public static void onBlocksRegistry(final RegistryEvent.Register<Block> blockRegistryEvent) {
-            // register a new block here
+            blockRegistryEvent.getRegistry().register(new MusicBlock());
             LOGGER.info("HELLO from Register Block");
+        }
+
+        @SubscribeEvent
+        public static void onItemsRegistry(final RegistryEvent.Register<Item> itemRegistryEvent)
+        {
+            Item.Properties properties = new Item.Properties()
+                    .group(setup.itemGroup);
+            itemRegistryEvent.getRegistry().register(new BlockItem(ModBlocks.MUSICBLOCK, properties).setRegistryName("musicblock"));
+            itemRegistryEvent.getRegistry().register(new MusicItem());
         }
     }
 }
