@@ -10,6 +10,8 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+
 public class MusicItem extends Item
 {
 
@@ -21,8 +23,9 @@ public class MusicItem extends Item
         setRegistryName("musicitem");
     }
 
+    @Nonnull
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn)
+    public ActionResult<ItemStack> onItemRightClick(@Nonnull World worldIn, @Nonnull PlayerEntity playerIn, @Nonnull Hand handIn)
     {
         if (!worldIn.isRemote)
         {
