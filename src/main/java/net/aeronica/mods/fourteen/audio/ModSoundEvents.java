@@ -8,8 +8,6 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ObjectHolder;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 
 @ObjectHolder(Fourteen.MODID)
@@ -17,7 +15,6 @@ public class ModSoundEvents
 {
     @ObjectHolder("pcm-proxy")
     public static final SoundEvent PCM_PROXY = registerSound("pcm-proxy");
-    private static final Logger LOGGER = LogManager.getLogger();
 
     private ModSoundEvents() { /* NOP */ }
 
@@ -43,7 +40,6 @@ public class ModSoundEvents
         public static void registerSoundEvents(final RegistryEvent.Register<SoundEvent> event)
         {
             event.getRegistry().registerAll(PCM_PROXY);
-            LOGGER.debug("Register pcm-proxy.");
         }
     }
 }

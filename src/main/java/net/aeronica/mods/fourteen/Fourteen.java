@@ -1,5 +1,6 @@
 package net.aeronica.mods.fourteen;
 
+import net.aeronica.mods.fourteen.audio.ClientAudio;
 import net.aeronica.mods.fourteen.blocks.ModBlocks;
 import net.aeronica.mods.fourteen.blocks.MusicBlock;
 import net.aeronica.mods.fourteen.items.MusicItem;
@@ -53,6 +54,7 @@ public class Fourteen
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.register(ClientAudio.ClientAudioEvents.class);
     }
 
     private void setup(final FMLCommonSetupEvent event)
