@@ -1,0 +1,10 @@
+{
+  "pcm-proxy": {
+    "sounds": [
+      {
+        "name": "fourteen:pcm-proxy",
+        "stream": true
+      }
+    ]
+  }
+}
