@@ -54,7 +54,7 @@ public class Fourteen
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
-        MinecraftForge.EVENT_BUS.register(ClientAudio.ClientAudioEvents.class);
+        MinecraftForge.EVENT_BUS.register(ClientAudio.class);
     }
 
     private void setup(final FMLCommonSetupEvent event)
