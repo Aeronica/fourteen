@@ -54,6 +54,7 @@ public class ClientAudio
         if (soundLocation.equals(ModSoundEvents.PCM_PROXY.getRegistryName()))
         {
             LOGGER.debug("pcm-proxy SoundEvent detected");
+            event.setResultSound(new MovingMusic(0));
         }
     }
 

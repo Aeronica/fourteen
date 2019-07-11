@@ -5,7 +5,7 @@ import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.audio.TickableSound;
 import net.minecraft.util.SoundCategory;
 
-public class MxSound extends TickableSound
+public abstract class MxSound extends TickableSound
 {
     protected int playID;
     private SoundEventAccessor soundEventAccessor;
@@ -24,10 +24,12 @@ public class MxSound extends TickableSound
         this.y = 0F;
         this.z = 0F;
         this.attenuationType = AttenuationType.LINEAR;
-        this.soundEventAccessor = new SoundEventAccessor(this.sound.getSoundLocation(), "fourteen.subtitle.pcm-proxy");
+        this.soundEventAccessor = new SoundEventAccessor(this.sound.getSoundLocation(), "subtitle.fourteen.pcm-proxy");
     }
 
-    // This is used as the key for our PlaySoundEvent handler
+    /**
+     * This is used as the key for our PlaySoundEvent handler
+     */
     MxSound()
     {
         super(ModSoundEvents.PCM_PROXY, SoundCategory.MASTER);
@@ -36,13 +38,13 @@ public class MxSound extends TickableSound
     @Override
     public SoundEventAccessor createAccessor(SoundHandler handler)
     {
-        return super.createAccessor(handler);
+        return this.soundEventAccessor;
     }
 
     @Override
     public void tick()
     {
-
+        onUpdate();
     }
 
     protected void onUpdate() { /* NOP */ }

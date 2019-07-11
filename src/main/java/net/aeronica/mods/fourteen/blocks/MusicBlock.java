@@ -30,7 +30,7 @@ public class MusicBlock extends Block
         {
             worldIn.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_COW_BELL, SoundCategory.BLOCKS, 1F, 2F);
         }
-        return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
+        return true;
     }
 
 

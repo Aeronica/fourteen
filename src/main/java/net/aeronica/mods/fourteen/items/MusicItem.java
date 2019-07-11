@@ -1,8 +1,7 @@
 package net.aeronica.mods.fourteen.items;
 
 import net.aeronica.mods.fourteen.Fourteen;
-import net.aeronica.mods.fourteen.audio.ModSoundEvents;
-import net.aeronica.mods.fourteen.audio.PCMSound;
+import net.aeronica.mods.fourteen.audio.MovingMusic;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -32,10 +31,10 @@ public class MusicItem extends Item
     {
         if (!worldIn.isRemote)
         {
-            worldIn.playSound(null, playerIn.getPosition(), SoundEvents.BLOCK_NOTE_BLOCK_COW_BELL, SoundCategory.PLAYERS, 1F, 1F);
+            //worldIn.playSound(null, playerIn.getPosition(), SoundEvents.BLOCK_NOTE_BLOCK_COW_BELL, SoundCategory.PLAYERS, 1F, 1F);
         } else
         {
-            //Minecraft.getInstance().getSoundHandler().play();
+            Minecraft.getInstance().getSoundHandler().play(new MovingMusic());
         }
         return super.onItemRightClick(worldIn, playerIn, handIn);
     }
