@@ -77,6 +77,7 @@ public class ClientAudio
                                              }, Util.getServerExecutor());
     }
 
+    private static ISound lastISound;
     private static void dump()
     {
         if (soundEngine != null && soundHandler != null)
@@ -84,7 +85,7 @@ public class ClientAudio
             synchronized (soundEngine.field_217942_m)
             {
                 for (Map.Entry<ISound, ChannelManager.Entry> entry : soundEngine.field_217942_m.entrySet())
-                    if (entry.getKey() instanceof MxSound && !entry.getValue().func_217889_a())
+                    if (entry.getKey() instanceof MxSound && !entry.getValue().func_217889_a() && lastISound != entry.getKey())
                     {
                         submitStream().thenAccept(iAudioStream -> {
                             entry.getValue().func_217888_a(soundSource->{
@@ -92,6 +93,7 @@ public class ClientAudio
                                 soundSource.func_216438_c();
                             });
                         });
+                        lastISound = entry.getKey();
                         LOGGER.debug("ISound {}, {}", entry.getKey(), entry.getValue());
                     }
             }

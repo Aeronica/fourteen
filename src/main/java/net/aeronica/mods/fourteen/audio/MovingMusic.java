@@ -1,5 +1,8 @@
 package net.aeronica.mods.fourteen.audio;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.SoundCategory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,6 +26,10 @@ public class MovingMusic extends MxSound
     public MovingMusic(Integer playID)
     {
         super(playID, SoundCategory.PLAYERS);
+        ClientPlayerEntity playerEntity = Minecraft.getInstance().player;
+        this.x = (float) playerEntity.posX;
+        this.y = (float) playerEntity.posY;
+        this.z = (float) playerEntity.posZ;
     }
 
     @Override

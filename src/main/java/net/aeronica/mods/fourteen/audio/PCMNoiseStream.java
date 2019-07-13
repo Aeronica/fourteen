@@ -29,6 +29,7 @@ public class PCMNoiseStream implements IAudioStream
             noiseBuffer.put((byte) x);
             noiseBuffer.put((byte) (x >> 8));
         }
+        noiseBuffer.flip();
     }
 
     @Override
