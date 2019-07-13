@@ -5,6 +5,7 @@ import net.aeronica.mods.fourteen.blocks.ModBlocks;
 import net.aeronica.mods.fourteen.blocks.MusicBlock;
 import net.aeronica.mods.fourteen.items.MusicItem;
 import net.aeronica.mods.fourteen.setup.Setup;
+import net.aeronica.mods.fourteen.util.MIDISystemUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.audio.ISoundEventListener;
@@ -67,6 +68,7 @@ public class Fourteen
     private void doClientStuff(final FMLClientSetupEvent event) {
         // do something that can only be done on the client
         LOGGER.info("Got game settings {}", event.getMinecraftSupplier().get().gameSettings);
+        MIDISystemUtil.mxTuneInit();
     }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call

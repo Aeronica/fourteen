@@ -2,7 +2,6 @@ package net.aeronica.mods.fourteen.audio;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.*;
-import net.minecraft.resources.IResource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
 import net.minecraftforge.client.event.sound.*;
@@ -33,6 +32,11 @@ public class ClientAudio
             soundEngine = se;
             soundHandler = soundEngine.sndHandler;
         }
+    }
+
+    public enum Status
+    {
+        WAITING, READY, ERROR, DONE
     }
 
     // SoundEngine
