@@ -1,12 +1,10 @@
 package net.aeronica.mods.fourteen.audio;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.ChannelManager;
-import net.minecraft.client.audio.ISound;
-import net.minecraft.client.audio.SoundEngine;
-import net.minecraft.client.audio.SoundHandler;
+import net.minecraft.client.audio.*;
+import net.minecraft.resources.IResource;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
+import net.minecraft.util.Util;
 import net.minecraftforge.client.event.sound.*;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
@@ -14,7 +12,10 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.IOException;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 
 public class ClientAudio
 {
@@ -60,6 +61,22 @@ public class ClientAudio
     //        }, Util.getServerExecutor());
     //    }
 
+
+
+    public static CompletableFuture<IAudioStream> submitStream()
+    {
+        return CompletableFuture.supplyAsync(() ->
+                                             {
+                                                 try
+                                                 {
+                                                     return new PCMNoiseStream();
+                                                 } catch (IOException ioexception)
+                                                 {
+                                                     throw new CompletionException(ioexception);
+                                                 }
+                                             }, Util.getServerExecutor());
+    }
+
     private static void dump()
     {
         if (soundEngine != null && soundHandler != null)
@@ -69,6 +86,12 @@ public class ClientAudio
                 for (Map.Entry<ISound, ChannelManager.Entry> entry : soundEngine.field_217942_m.entrySet())
                     if (entry.getKey() instanceof MxSound && !entry.getValue().func_217889_a())
                     {
+                        submitStream().thenAccept(iAudioStream -> {
+                            entry.getValue().func_217888_a(soundSource->{
+                                soundSource.func_216433_a(iAudioStream);
+                                soundSource.func_216438_c();
+                            });
+                        });
                         LOGGER.debug("ISound {}, {}", entry.getKey(), entry.getValue());
                     }
             }
