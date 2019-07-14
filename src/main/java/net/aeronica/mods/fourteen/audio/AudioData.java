@@ -21,6 +21,7 @@ import net.aeronica.mods.fourteen.managers.PlayIdSupplier;
 import net.minecraft.client.audio.ISound;
 import net.minecraft.util.math.BlockPos;
 
+import javax.annotation.Nullable;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 
@@ -48,7 +49,7 @@ public class AudioData
     private int fadeTicks;
     private int fadeCounter;
 
-    AudioData(int playId, BlockPos blockPos, boolean isClientPlayer, SoundRange soundRange, IAudioStatusCallback callback)
+    AudioData(int playId, @Nullable BlockPos blockPos, boolean isClientPlayer, SoundRange soundRange, IAudioStatusCallback callback)
     {
         this.playId = playId;
         this.playType = PlayIdSupplier.getTypeForPlayId(playId);
@@ -95,6 +96,7 @@ public class AudioData
         return playId;
     }
 
+    @Nullable
     BlockPos getBlockPos()
     {
         return blockPos;
@@ -130,6 +132,7 @@ public class AudioData
         this.uuid = uuid;
     }
 
+    @Nullable
     synchronized ISound getISound()
     {
         return iSound;

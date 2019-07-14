@@ -13,73 +13,101 @@ import java.util.Random;
 
 import static net.aeronica.mods.fourteen.audio.ClientAudio.Status.*;
 
-public class PCMNoiseStream implements IAudioStream
+public class PCMAudioStream implements IAudioStream
 {
     private static final org.apache.logging.log4j.Logger LOGGER = LogManager.getLogger();
     private static final int SAMPLE_SIZE = 8192;
     private final AudioData audioData;
     private AudioInputStream audioInputStream = null;
-    private ByteBuffer noiseBuffer = BufferUtils.createByteBuffer(SAMPLE_SIZE * 2);
+    private ByteBuffer zeroBuffer = BufferUtils.createByteBuffer(SAMPLE_SIZE * 2);
     private Random randInt;
     private boolean hasStream = false;
     private int zeroBufferCount = 0;
 
-    public PCMNoiseStream(AudioData audioData) throws IOException
+    public PCMAudioStream()
     {
-        this.audioData = audioData;
+        int playId = ClientAudio.pollPlayIDQueue02();
+        this.audioData = ClientAudio.getAudioData(playId);
         randInt = new java.util.Random(System.currentTimeMillis());
-        nextNoiseZeroBuffer();
+        nextZeroBuffer();
     }
 
-    private void nextNoiseZeroBuffer()
+    private void nextZeroBuffer()
     {
         for (int i = 0; i < SAMPLE_SIZE; i++)
         {
-            int x = (short) (randInt.nextInt() / 3) * 2;
-            noiseBuffer.put((byte) x);
-            noiseBuffer.put((byte) (x >> 8));
+            zeroBuffer.put((byte)0);
+            zeroBuffer.put((byte)0);
         }
-        noiseBuffer.flip();
+        zeroBuffer.flip();
     }
 
     @Override
     public AudioFormat func_216454_a()
     {
-        // PCM Signed Monaural little endian
         return audioData.getAudioFormat();
     }
 
-    @Override
     /*
      * read - for static pre-loaded audio - not used
      */
+    @Override
     public ByteBuffer func_216453_b() throws IOException
     {
         LOGGER.debug("ByteBuffer func_216453_b()");
         ByteBuffer byteBuffer = BufferUtils.createByteBuffer(SAMPLE_SIZE * 2);
-        byteBuffer.put(noiseBuffer);
-        noiseBuffer.flip();
-        nextNoiseZeroBuffer();
+        byteBuffer.put(zeroBuffer);
+        nextZeroBuffer();
+        zeroBuffer.flip();
         byteBuffer.flip();
         return byteBuffer;
     }
 
-    @Nullable
-    @Override
     /*
      * streamRead(int bufferSize) - for streaming audio
      */
+    @Nullable
+    @Override
     public ByteBuffer func_216455_a(int p_216455_1_) throws IOException
     {
         if (hasInputStreamError())
             return null;
         notifyOnInputStreamAvailable();
 
-        ByteBuffer byteBuffer = BufferUtils.createByteBuffer(p_216455_1_ + (SAMPLE_SIZE * 2));
-        LOGGER.debug("ByteBuffer func_216455_a( {} )", p_216455_1_);
-        byteBuffer.put(noiseBuffer);
-        noiseBuffer.flip();
-        nextNoiseZeroBuffer();
+        int bufferSize;
+        byte[] readBuffer = new byte[SAMPLE_SIZE * 2];
+        ByteBuffer byteBuffer = BufferUtils.createByteBuffer(p_216455_1_);
+        try
+        {
+            if (hasStream && (audioInputStream != null))
+            {
+                bufferSize = audioInputStream.read(readBuffer);
+                if (bufferSize > 0)
+                    byteBuffer.put(readBuffer);
+
+                if (bufferSize == -1)
+                {
+                    audioDataSetStatus(ClientAudio.Status.DONE);
+                    return null;
+                }
+            }
+            else
+            {
+                nextZeroBuffer();
+                byteBuffer.put(zeroBuffer);
+                if (zeroBufferCount++ > 64)
+                {
+                    LOGGER.error("MML to PCM audio processing took too long. Aborting!");
+                    audioDataSetStatus(ClientAudio.Status.ERROR);
+                    return null;
+                }
+            }
+        } catch (IOException e)
+        {
+            audioDataSetStatus(ClientAudio.Status.ERROR);
+            return null;
+        }
+        zeroBuffer.flip();
         byteBuffer.flip();
         return byteBuffer;
     }

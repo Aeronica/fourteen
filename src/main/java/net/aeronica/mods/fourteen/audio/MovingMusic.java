@@ -2,7 +2,6 @@ package net.aeronica.mods.fourteen.audio;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.SoundCategory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -10,7 +9,6 @@ import org.apache.logging.log4j.Logger;
 public class MovingMusic extends MxSound
 {
     private static final Logger LOGGER = LogManager.getLogger();
-    private int ticks = 20;
     /**
      * This is used as the key for our PlaySoundEvent handler
      **/
@@ -30,12 +28,16 @@ public class MovingMusic extends MxSound
         this.x = (float) playerEntity.posX;
         this.y = (float) playerEntity.posY;
         this.z = (float) playerEntity.posZ;
+        if (ClientAudio.hasPlayID(playID))
+        {
+            ClientAudio.setISound(playID, this);
+        }
     }
 
     @Override
     public void onUpdate()
     {
-        if (ticks-- < 0 && !donePlaying)
+        if (!ClientAudio.hasPlayID(playID) && !donePlaying)
         {
             this.donePlaying = true;
             LOGGER.debug("MovingMusic playID {} done", playID);

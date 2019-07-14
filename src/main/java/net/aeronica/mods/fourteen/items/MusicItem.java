@@ -1,7 +1,10 @@
 package net.aeronica.mods.fourteen.items;
 
+import net.aeronica.libs.mml.core.TestData;
 import net.aeronica.mods.fourteen.Fourteen;
+import net.aeronica.mods.fourteen.audio.ClientAudio;
 import net.aeronica.mods.fourteen.audio.MovingMusic;
+import net.aeronica.mods.fourteen.managers.PlayIdSupplier;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -36,8 +39,7 @@ public class MusicItem extends Item
             //worldIn.playSound(null, playerIn.getPosition(), SoundEvents.BLOCK_NOTE_BLOCK_COW_BELL, SoundCategory.PLAYERS, 1F, 1F);
         } else
         {
-            LOGGER.debug("DISABLED! - Minecraft.getInstance().getSoundHandler().play(new MovingMusic());");
-            // Minecraft.getInstance().getSoundHandler().play(new MovingMusic());
+            ClientAudio.play(PlayIdSupplier.PlayType.PLAYERS.getAsInt(), TestData.MML2.getMML());
         }
         return super.onItemRightClick(worldIn, playerIn, handIn);
     }
