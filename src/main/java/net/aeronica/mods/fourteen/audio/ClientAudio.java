@@ -67,18 +67,18 @@ public class ClientAudio
 
 
 
-    public static CompletableFuture<IAudioStream> submitStream()
+    public static CompletableFuture<IAudioStream> submitStream(AudioData audioData)
     {
         return CompletableFuture.supplyAsync(() ->
-                                             {
-                                                 try
-                                                 {
-                                                     return new PCMNoiseStream();
-                                                 } catch (IOException ioexception)
-                                                 {
-                                                     throw new CompletionException(ioexception);
-                                                 }
-                                             }, Util.getServerExecutor());
+             {
+                 try
+                 {
+                     return new PCMNoiseStream(audioData);
+                 } catch (IOException ioexception)
+                 {
+                     throw new CompletionException(ioexception);
+                 }
+             }, Util.getServerExecutor());
     }
 
     private static ISound lastISound;
@@ -91,7 +91,7 @@ public class ClientAudio
                 for (Map.Entry<ISound, ChannelManager.Entry> entry : soundEngine.field_217942_m.entrySet())
                     if (entry.getKey() instanceof MxSound && !entry.getValue().func_217889_a() && lastISound != entry.getKey())
                     {
-                        submitStream().thenAccept(iAudioStream -> {
+                        submitStream(null).thenAccept(iAudioStream -> { // TODO: FIXME
                             entry.getValue().func_217888_a(soundSource->{
                                 soundSource.func_216433_a(iAudioStream);
                                 soundSource.func_216438_c();

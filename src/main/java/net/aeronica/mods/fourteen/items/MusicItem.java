@@ -11,12 +11,14 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.world.World;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 
 public class MusicItem extends Item
 {
-
+    private static final Logger LOGGER = LogManager.getLogger();
     public MusicItem()
     {
         super(new Item.Properties()
@@ -34,7 +36,8 @@ public class MusicItem extends Item
             //worldIn.playSound(null, playerIn.getPosition(), SoundEvents.BLOCK_NOTE_BLOCK_COW_BELL, SoundCategory.PLAYERS, 1F, 1F);
         } else
         {
-            Minecraft.getInstance().getSoundHandler().play(new MovingMusic());
+            LOGGER.debug("DISABLED! - Minecraft.getInstance().getSoundHandler().play(new MovingMusic());");
+            // Minecraft.getInstance().getSoundHandler().play(new MovingMusic());
         }
         return super.onItemRightClick(worldIn, playerIn, handIn);
     }

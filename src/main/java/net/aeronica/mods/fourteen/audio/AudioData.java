@@ -30,7 +30,7 @@ import static net.aeronica.mods.fourteen.audio.ClientAudio.Status.ERROR;
 
 public class AudioData
 {
-    private final Integer playId;
+    private final int playId;
     private final BlockPos blockPos;
     private final boolean isClientPlayer;
     private final SoundRange soundRange;
@@ -48,7 +48,7 @@ public class AudioData
     private int fadeTicks;
     private int fadeCounter;
 
-    AudioData(Integer playId, BlockPos blockPos, boolean isClientPlayer, SoundRange soundRange, IAudioStatusCallback callback)
+    AudioData(int playId, BlockPos blockPos, boolean isClientPlayer, SoundRange soundRange, IAudioStatusCallback callback)
     {
         this.playId = playId;
         this.playType = PlayIdSupplier.getTypeForPlayId(playId);
@@ -90,7 +90,7 @@ public class AudioData
         }
     }
 
-    public Integer getPlayId()
+    public int getPlayId()
     {
         return playId;
     }

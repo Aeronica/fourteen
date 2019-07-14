@@ -28,7 +28,7 @@ minecraft {
     mappings channel: 'snapshot', version: '20190624-1.14.2'
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
     
-    accessTransformer = file('build/resources/main/META-INF/accesstransformer.cfg')
+    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     // Default run configurations.
     // These can be tweaked, removed, or duplicated as needed.
@@ -38,9 +38,9 @@ minecraft {
 
             // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
+            ideaModule "${project.name}.main"
 
             mods {
                 fourteen {
@@ -54,9 +54,9 @@ minecraft {
 
             // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
+            ideaModule "${project.name}.main"
 
             mods {
                 fourteen {
