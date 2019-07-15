@@ -203,7 +203,7 @@ public class ClientAudio
                 LOGGER.warn("ClientAudio#play: playID: %s has already been submitted", playID);
                 return;
             }
-            mc.getSoundHandler().play(new MovingMusic());
+            mc.getSoundHandler().play(new MovingMusic(audioData));
             executorService.execute(new ThreadedPlay(audioData, musicText));
         } else
         {
@@ -407,7 +407,7 @@ public class ClientAudio
             if (playId != PlayIdSupplier.INVALID)
             {
                 LOGGER.debug("pcm-proxy SoundEvent detected");
-                event.setResultSound(new MovingMusic(playId));
+                //event.setResultSound(new MovingMusic(playId));
             }
         }
     }
