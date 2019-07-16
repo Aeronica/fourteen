@@ -49,7 +49,7 @@ public class AudioData
     private int fadeTicks;
     private int fadeCounter;
 
-    AudioData(int playId, @Nullable BlockPos blockPos, boolean isClientPlayer, SoundRange soundRange, IAudioStatusCallback callback)
+    AudioData(int playId, @Nullable BlockPos blockPos, boolean isClientPlayer, SoundRange soundRange, @Nullable IAudioStatusCallback callback)
     {
         this.playId = playId;
         this.playType = PlayIdSupplier.getTypeForPlayId(playId);

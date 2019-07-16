@@ -1,5 +1,9 @@
 package net.aeronica.mods.fourteen.blocks;
 
+import net.aeronica.libs.mml.core.TestData;
+import net.aeronica.mods.fourteen.audio.ClientAudio;
+import net.aeronica.mods.fourteen.audio.SoundRange;
+import net.aeronica.mods.fourteen.managers.PlayIdSupplier;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
@@ -28,7 +32,10 @@ public class MusicBlock extends Block
     {
         if (!worldIn.isRemote)
         {
-            worldIn.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_COW_BELL, SoundCategory.BLOCKS, 1F, 2F);
+            // worldIn.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_COW_BELL, SoundCategory.BLOCKS, 1F, 2F);
+        } else
+        {
+            ClientAudio.play(PlayIdSupplier.PlayType.PLAYERS.getAsInt(), pos, TestData.MML10.getMML(), SoundRange.NORMAL);
         }
         return true;
     }

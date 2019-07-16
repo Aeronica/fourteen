@@ -9,7 +9,6 @@ import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.Random;
 
 import static net.aeronica.mods.fourteen.audio.ClientAudio.Status.*;
 
@@ -20,15 +19,12 @@ public class PCMAudioStream implements IAudioStream
     private final AudioData audioData;
     private AudioInputStream audioInputStream = null;
     private ByteBuffer zeroBuffer = BufferUtils.createByteBuffer(SAMPLE_SIZE * 2);
-    private Random randInt;
     private boolean hasStream = false;
     private int zeroBufferCount = 0;
 
-    public PCMAudioStream()
+    public PCMAudioStream(AudioData audioData)
     {
-        int playId = ClientAudio.pollPlayIDQueue02();
-        this.audioData = ClientAudio.getAudioData(playId);
-        randInt = new java.util.Random(System.currentTimeMillis());
+        this.audioData = audioData;
         nextZeroBuffer();
     }
 

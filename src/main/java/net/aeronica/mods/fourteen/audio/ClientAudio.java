@@ -5,7 +5,6 @@ import net.aeronica.mods.fourteen.Fourteen;
 import net.aeronica.mods.fourteen.managers.PlayIdSupplier;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.*;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.client.event.sound.*;
@@ -36,8 +35,6 @@ public class ClientAudio
     /* PCM Signed Stereo little endian */
     private static final AudioFormat audioFormatStereo = new AudioFormat(48000, 16, 2, true, false);
     /* Used to track which player/groups queued up music to be played by PlayID */
-    private static Queue<Integer> playIDQueue01 = new ConcurrentLinkedQueue<>(); // Polled in ClientAudio#PlaySoundEvent
-    private static Queue<Integer> playIDQueue02 = new ConcurrentLinkedQueue<>(); // Polled in PCMAudioStream
     private static Queue<Integer> playIDQueue03 = new ConcurrentLinkedQueue<>(); // Polled in initializeCodec
     private static final Map<Integer, AudioData> playIDAudioData = new ConcurrentHashMap<>();
 
@@ -80,19 +77,7 @@ public class ClientAudio
 
     private static synchronized void addPlayIDQueue(int playID)
     {
-        playIDQueue01.add(playID);
-        playIDQueue02.add(playID);
         playIDQueue03.add(playID);
-    }
-
-    private static int pollPlayIDQueue01()
-    {
-        return playIDQueue01.peek() == null ? PlayIdSupplier.INVALID : playIDQueue01.poll();
-    }
-
-    static int pollPlayIDQueue02()
-    {
-        return playIDQueue02.peek() == null ? PlayIdSupplier.INVALID : playIDQueue02.poll();
     }
 
     private static int pollPlayIDQueue03()
@@ -173,7 +158,7 @@ public class ClientAudio
         play(playID, pos, musicText, false, soundRange, null);
     }
 
-    public static void playLocal(int playId, String musicText, IAudioStatusCallback callback)
+    public static void playLocal(int playId, String musicText, @Nullable IAudioStatusCallback callback)
     {
         play(playId, mc.player.getPosition(), musicText, true, SoundRange.INFINITY, callback);
     }
@@ -189,7 +174,7 @@ public class ClientAudio
         else audioData.setAudioFormat(audioFormat3D);
     }
 
-    private static void play(int playID, @Nullable BlockPos pos, String musicText, boolean isClient, SoundRange soundRange, IAudioStatusCallback callback)
+    private static void play(int playID, @Nullable BlockPos pos, String musicText, boolean isClient, SoundRange soundRange, @Nullable IAudioStatusCallback callback)
     {
         startThreadFactory();
         if(playID != PlayIdSupplier.INVALID)
@@ -203,7 +188,10 @@ public class ClientAudio
                 LOGGER.warn("ClientAudio#play: playID: %s has already been submitted", playID);
                 return;
             }
-            mc.getSoundHandler().play(new MovingMusic(audioData));
+            if (isClient)
+                mc.getSoundHandler().play(new MusicClient(audioData));
+            else
+                mc.getSoundHandler().play(new MusicPositioned(audioData));
             executorService.execute(new ThreadedPlay(audioData, musicText));
         } else
         {
@@ -213,6 +201,7 @@ public class ClientAudio
 
     public static void stop(int playID)
     {
+        if (PlayIdSupplier.INVALID == playID) return;
         AudioData audioData = playIDAudioData.get(playID);
         if (audioData != null && audioData.getISound() != null)
             soundHandler.stop(audioData.getISound());
@@ -240,8 +229,6 @@ public class ClientAudio
     private static void cleanup()
     {
         playIDAudioData.keySet().forEach(ClientAudio::queueAudioDataRemoval);
-        playIDQueue01.clear();
-        playIDQueue02.clear();
         playIDQueue03.clear();
     }
 
@@ -272,12 +259,19 @@ public class ClientAudio
     //    }
 
 
-
-    private static CompletableFuture<IAudioStream> submitStream()
+    /**
+     *
+     * @return the IAudioStream from the newly created PCMAudioStream
+     * @param audioData
+     */
+    private static CompletableFuture<IAudioStream> submitStream(AudioData audioData)
     {
-        return CompletableFuture.supplyAsync(PCMAudioStream::new, Util.getServerExecutor());
+        return CompletableFuture.supplyAsync(() -> new PCMAudioStream(audioData), Util.getServerExecutor());
     }
 
+    /**
+     * Try to create a
+     */
     private static void initializeCodec()
     {
         if (soundEngine != null && soundHandler != null && peekPlayIDQueue03() != PlayIdSupplier.INVALID)
@@ -291,7 +285,7 @@ public class ClientAudio
                     ChannelManager.Entry entry = soundEngine.field_217942_m.get(sound);
                     if (entry != null)
                     {
-                        submitStream().thenAccept(iAudioStream -> entry.func_217888_a(soundSource ->
+                        submitStream(audioData).thenAccept(iAudioStream -> entry.func_217888_a(soundSource ->
                             {
                                 soundSource.func_216433_a(iAudioStream);
                                 soundSource.func_216438_c();
@@ -301,12 +295,10 @@ public class ClientAudio
                     }
                     else
                     {
-                        int pid2 = pollPlayIDQueue02();
-                        int pid3 = pollPlayIDQueue03();
-                        playIDAudioData.remove(pid3);
-                        LOGGER.debug("initializeCodec: failed - Queue2: {}, Queue 3: {}", pid2, pid3);
+                        int playId = pollPlayIDQueue03();
+                        playIDAudioData.remove(playId);
+                        LOGGER.debug("initializeCodec: failed - Queue 3: {}", playId);
                     }
-
                 }
             }
         }
@@ -375,8 +367,7 @@ public class ClientAudio
     @SubscribeEvent
     public static void event(SoundSetupEvent event) // never gets called
     {
-        soundEngine = event.getManager();
-        soundHandler = Minecraft.getInstance().getSoundHandler();
+        init(event.getManager());
         LOGGER.debug("SoundSetupEvent");
     }
 
@@ -384,8 +375,7 @@ public class ClientAudio
     public static void event(SoundLoadEvent event) // only called on sound reload. i.e. key-press F3+T
     {
         cleanup();
-        soundEngine = event.getManager();
-        soundHandler = Minecraft.getInstance().getSoundHandler();
+        init(event.getManager());
         LOGGER.debug("SoundLoadEvent");
     }
 
@@ -399,17 +389,8 @@ public class ClientAudio
     @SubscribeEvent
     public static void event(PlaySoundEvent event)
     {
+        // Gets called often so pretty much guarantees ClientAudio will get initialized.
         init(event.getManager());
-        ResourceLocation soundLocation = event.getSound().getSoundLocation();
-        if (soundLocation.equals(ModSoundEvents.PCM_PROXY.getRegistryName()))
-        {
-            int playId = pollPlayIDQueue01();
-            if (playId != PlayIdSupplier.INVALID)
-            {
-                LOGGER.debug("pcm-proxy SoundEvent detected");
-                //event.setResultSound(new MovingMusic(playId));
-            }
-        }
     }
 
     @SubscribeEvent
@@ -417,6 +398,7 @@ public class ClientAudio
     {
         if (event.getSound().getSoundLocation().equals(ModSoundEvents.PCM_PROXY.getRegistryName()))
         {
+            // This will never get called since the consumer of the stream disqualifies non-ogg sound resources.
             LOGGER.debug("pcm-proxy PlayStreamingSourceEvent");
         }
     }
