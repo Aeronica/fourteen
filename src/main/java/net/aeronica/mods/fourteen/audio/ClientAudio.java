@@ -35,7 +35,7 @@ public class ClientAudio
     /* PCM Signed Stereo little endian */
     private static final AudioFormat audioFormatStereo = new AudioFormat(48000, 16, 2, true, false);
     /* Used to track which player/groups queued up music to be played by PlayID */
-    private static Queue<Integer> playIDQueue03 = new ConcurrentLinkedQueue<>(); // Polled in initializeCodec
+    private static final Queue<Integer> playIDQueue01 = new ConcurrentLinkedQueue<>(); // Polled in initializeCodec
     private static final Map<Integer, AudioData> playIDAudioData = new ConcurrentHashMap<>();
 
     private static ExecutorService executorService = null;
@@ -77,32 +77,26 @@ public class ClientAudio
 
     private static synchronized void addPlayIDQueue(int playID)
     {
-        playIDQueue03.add(playID);
+        playIDQueue01.add(playID);
     }
 
-    private static int pollPlayIDQueue03()
+    @SuppressWarnings("all")
+    private static int pollPlayIDQueue01()
     {
-        return playIDQueue03.peek() == null ? PlayIdSupplier.INVALID : playIDQueue03.poll();
+        return playIDQueue01.peek() == null ? PlayIdSupplier.INVALID : playIDQueue01.poll();
     }
 
-    private static int peekPlayIDQueue03()
+    private static int peekPlayIDQueue01()
     {
-        return playIDQueue03.peek() == null ? PlayIdSupplier.INVALID : playIDQueue03.peek();
+        return playIDQueue01.peek() == null ? PlayIdSupplier.INVALID : playIDQueue01.peek();
     }
 
-    static AudioData getAudioData(Integer playID)
+    private static AudioData getAudioData(Integer playID)
     {
         synchronized (THREAD_SYNC)
         {
             return playIDAudioData.get(playID);
         }
-    }
-
-    private static synchronized void setUuid(Integer playID, String uuid)
-    {
-        AudioData audioData = playIDAudioData.get(playID);
-        if (audioData != null)
-            audioData.setUuid(uuid);
     }
 
     static synchronized void setISound(Integer playID, ISound iSound)
@@ -117,12 +111,6 @@ public class ClientAudio
     {
         AudioData audioData = playIDAudioData.get(playID);
         return (audioData != null) ? audioData.getBlockPos() : null;
-    }
-
-    private static SoundRange getSoundRange(Integer playID)
-    {
-        AudioData audioData = playIDAudioData.get(playID);
-        return audioData != null ? audioData.getSoundRange() :  SoundRange.NORMAL;
     }
 
     static boolean hasPlayID(int playID)
@@ -143,7 +131,7 @@ public class ClientAudio
      */
     public static void play(Integer playID, String musicText)
     {
-        play(playID, null, musicText, false, SoundRange.NORMAL, null);
+        play(playID, null, musicText, false, null);
     }
 
     /**
@@ -151,36 +139,34 @@ public class ClientAudio
      * @param playID unique submission identifier.
      * @param pos block position in the world
      * @param musicText MML string
-     * @param soundRange defines the attenuation: NATURAL or INFINITY respectively
      */
-    public static void play(Integer playID, BlockPos pos, String musicText, SoundRange soundRange)
+    public static void play(Integer playID, BlockPos pos, String musicText)
     {
-        play(playID, pos, musicText, false, soundRange, null);
+        play(playID, pos, musicText, false, null);
     }
 
     public static void playLocal(int playId, String musicText, @Nullable IAudioStatusCallback callback)
     {
-        play(playId, mc.player.getPosition(), musicText, true, SoundRange.INFINITY, callback);
+        play(playId, mc.player.getPosition(), musicText, true, callback);
     }
 
 
     // Determine if audio is 3D spacial or background
     // Players playing solo, or in JAMS hear their own audio without 3D effects or falloff.
-    // Musical Automata that have SoundRange.INFINITY will play for all clients without 3D effects or falloff.
     private static void setAudioFormat(AudioData audioData)
     {
-        if (audioData.isClientPlayer() || (audioData.getSoundRange() == SoundRange.INFINITY))
+        if (audioData.isClientPlayer())
             audioData.setAudioFormat(audioFormatStereo);
         else audioData.setAudioFormat(audioFormat3D);
     }
 
-    private static void play(int playID, @Nullable BlockPos pos, String musicText, boolean isClient, SoundRange soundRange, @Nullable IAudioStatusCallback callback)
+    private static void play(int playID, @Nullable BlockPos pos, String musicText, boolean isClient, @Nullable IAudioStatusCallback callback)
     {
         startThreadFactory();
         if(playID != PlayIdSupplier.INVALID)
         {
             addPlayIDQueue(playID);
-            AudioData audioData = new AudioData(playID, pos, isClient, soundRange, callback);
+            AudioData audioData = new AudioData(playID, pos, isClient, callback);
             setAudioFormat(audioData);
             AudioData result = playIDAudioData.putIfAbsent(playID, audioData);
             if (result != null)
@@ -229,7 +215,7 @@ public class ClientAudio
     private static void cleanup()
     {
         playIDAudioData.keySet().forEach(ClientAudio::queueAudioDataRemoval);
-        playIDQueue03.clear();
+        playIDQueue01.clear();
     }
 
     // SoundEngine
@@ -274,11 +260,11 @@ public class ClientAudio
      */
     private static void initializeCodec()
     {
-        if (soundEngine != null && soundHandler != null && peekPlayIDQueue03() != PlayIdSupplier.INVALID)
+        if (soundEngine != null && soundHandler != null && peekPlayIDQueue01() != PlayIdSupplier.INVALID)
         {
             synchronized (soundEngine.field_217942_m)
             {
-                AudioData audioData = getAudioData(peekPlayIDQueue03());
+                AudioData audioData = getAudioData(pollPlayIDQueue01());
                 if (audioData.getISound() != null)
                 {
                     ISound sound = audioData.getISound();
@@ -290,12 +276,12 @@ public class ClientAudio
                                 soundSource.func_216433_a(iAudioStream);
                                 soundSource.func_216438_c();
                             }));
-                        int playId = pollPlayIDQueue03();
-                        LOGGER.debug("initializeCodec: PlayID {}, ISound {}", playId, sound);
+                        int playId = audioData.getPlayId();
+                        LOGGER.debug("initializeCodec: PlayID {}, ISound {}", playId, sound.getSoundLocation());
                     }
                     else
                     {
-                        int playId = pollPlayIDQueue03();
+                        int playId = audioData.getPlayId();
                         playIDAudioData.remove(playId);
                         LOGGER.debug("initializeCodec: failed - Queue 3: {}", playId);
                     }
@@ -331,7 +317,7 @@ public class ClientAudio
                     // Therefore the removal is queued for 250 milliseconds.
                     // e.g. the client tick setup to trigger once every 1/4 second.
                     queueAudioDataRemoval(entry.getKey());
-                    LOGGER.debug("updateClientAudio: AudioData for playID queued for removal");
+                    LOGGER.debug("updateClientAudio: AudioData for playID {} queued for removal", entry.getKey());
                 }
             }
         }

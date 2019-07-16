@@ -34,10 +34,8 @@ public class AudioData
     private final int playId;
     private final BlockPos blockPos;
     private final boolean isClientPlayer;
-    private final SoundRange soundRange;
     private AudioInputStream audioStream;
     private AudioFormat audioFormat;
-    private String uuid;
     private ISound iSound;
     private ClientAudio.Status status;
     private final PlayIdSupplier.PlayType playType;
@@ -49,13 +47,12 @@ public class AudioData
     private int fadeTicks;
     private int fadeCounter;
 
-    AudioData(int playId, @Nullable BlockPos blockPos, boolean isClientPlayer, SoundRange soundRange, @Nullable IAudioStatusCallback callback)
+    AudioData(int playId, @Nullable BlockPos blockPos, boolean isClientPlayer, @Nullable IAudioStatusCallback callback)
     {
         this.playId = playId;
         this.playType = PlayIdSupplier.getTypeForPlayId(playId);
         this.blockPos = blockPos;
         this.isClientPlayer = isClientPlayer;
-        this.soundRange = soundRange;
         this.status = ClientAudio.Status.WAITING;
         this.callback = callback;
     }
@@ -107,8 +104,6 @@ public class AudioData
         return isClientPlayer;
     }
 
-    SoundRange getSoundRange() { return soundRange; }
-
     synchronized AudioInputStream getAudioStream()
     {
         return audioStream;
@@ -120,16 +115,6 @@ public class AudioData
         {
             this.audioStream = audioStream;
         }
-    }
-
-    public String getUuid()
-    {
-        return uuid;
-    }
-
-    public void setUuid(String uuid)
-    {
-        this.uuid = uuid;
     }
 
     @Nullable

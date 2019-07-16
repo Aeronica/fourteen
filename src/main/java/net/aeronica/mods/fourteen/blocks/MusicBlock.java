@@ -2,7 +2,6 @@ package net.aeronica.mods.fourteen.blocks;
 
 import net.aeronica.libs.mml.core.TestData;
 import net.aeronica.mods.fourteen.audio.ClientAudio;
-import net.aeronica.mods.fourteen.audio.SoundRange;
 import net.aeronica.mods.fourteen.managers.PlayIdSupplier;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -10,8 +9,6 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
@@ -35,7 +32,7 @@ public class MusicBlock extends Block
             // worldIn.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_COW_BELL, SoundCategory.BLOCKS, 1F, 2F);
         } else
         {
-            ClientAudio.play(PlayIdSupplier.PlayType.PLAYERS.getAsInt(), pos, TestData.MML10.getMML(), SoundRange.NORMAL);
+            ClientAudio.play(PlayIdSupplier.PlayType.PLAYERS.getAsInt(), pos, TestData.MML10.getMML());
         }
         return true;
     }

@@ -16,6 +16,7 @@ public class MusicPositioned extends MxSound
             this.x = blockPos.getX();
             this.y = blockPos.getY();
             this.z = blockPos.getZ();
+            this.volume = 4.0F;
         }
     }
 
