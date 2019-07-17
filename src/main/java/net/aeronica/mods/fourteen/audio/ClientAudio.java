@@ -262,16 +262,16 @@ public class ClientAudio
     {
         if (soundEngine != null && soundHandler != null && peekPlayIDQueue01() != PlayIdSupplier.INVALID)
         {
-            synchronized (soundEngine.field_217942_m)
+            synchronized (soundEngine.playingSoundsChannel)
             {
                 AudioData audioData = getAudioData(pollPlayIDQueue01());
                 if (audioData.getISound() != null)
                 {
                     ISound sound = audioData.getISound();
-                    ChannelManager.Entry entry = soundEngine.field_217942_m.get(sound);
+                    ChannelManager.Entry entry = soundEngine.playingSoundsChannel.get(sound);
                     if (entry != null)
                     {
-                        submitStream(audioData).thenAccept(iAudioStream -> entry.func_217888_a(soundSource ->
+                        submitStream(audioData).thenAccept(iAudioStream -> entry.runOnSoundExecutor(soundSource ->
                             {
                                 soundSource.func_216433_a(iAudioStream);
                                 soundSource.func_216438_c();
@@ -309,7 +309,7 @@ public class ClientAudio
             {
                 AudioData audioData = entry.getValue();
                 Status status = audioData.getStatus();
-                if (status == Status.ERROR || status == Status.DONE || !soundEngine.field_217942_m.containsKey(audioData.getISound()))
+                if (status == Status.ERROR || status == Status.DONE || !soundEngine.playingSoundsChannel.containsKey(audioData.getISound()))
                 {
                     // Stopping playing audio takes 100 milliseconds. e.g. SoundSystem fadeOut(<source>, <delay in ms>)
                     // To prevent audio clicks/pops we have the wait at least that amount of time
