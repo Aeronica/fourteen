@@ -148,4 +148,39 @@ publishing {
     }
 }
 
+task updateMappings() {
 
+    def remapped = file('src_remapped/main/java/net/aeronica/mods/fourteen')
+    def methods = file('methods.csv')
+    def fields = file('fields.csv')
+    def source = relativeProjectPath('src/main/java/net/aeronica/mods/fourteen')
+
+    doLast {
+
+        Map<String, String> map = new HashMap<>()
+        methods.eachLine {line ->
+            String[] pts = line.split(",")
+            map.put(pts[0], pts[1])
+        }
+        fields.eachLine {line ->
+            String[] pts = line.split(",")
+            map.put(pts[0], pts[1])
+        }
+
+        copy {
+            from source
+            into remapped
+            include '**/*.java'
+
+            filter { javaLine ->
+                map.entrySet().each { entry ->
+                    javaLine = javaLine.replace(entry.getKey(), entry.getValue())
+                }
+                return javaLine
+            }
+
+            includeEmptyDirs = false
+            eachFile { println "Processing: $it.name" }
+        }
+    }
+}
