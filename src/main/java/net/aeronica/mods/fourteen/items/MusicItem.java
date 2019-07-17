@@ -35,7 +35,7 @@ public class MusicItem extends Item
             //worldIn.playSound(null, playerIn.getPosition(), SoundEvents.BLOCK_NOTE_BLOCK_COW_BELL, SoundCategory.PLAYERS, 1F, 1F);
         } else
         {
-            ClientAudio.playLocal(PlayIdSupplier.PlayType.BACKGROUND.getAsInt(), TestData.MML4.getMML(), null);
+            ClientAudio.playLocal(PlayIdSupplier.PlayType.BACKGROUND.getAsInt(), TestData.MML14.getMML(), null);
         }
         return super.onItemRightClick(worldIn, playerIn, handIn);
     }
