@@ -7,13 +7,11 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import org.apache.logging.log4j.LogManager;
 
-import javax.vecmath.Vector3d;
-
 public class MusicPositioned extends MxSound
 {
     private static final org.apache.logging.log4j.Logger LOGGER = LogManager.getLogger();
-    Minecraft mc = Minecraft.getInstance();
-    private float distance = 0.0F;
+    private Minecraft mc = Minecraft.getInstance();
+
     MusicPositioned(AudioData audioData)
     {
         super(audioData, SoundCategory.RECORDS);
@@ -35,9 +33,9 @@ public class MusicPositioned extends MxSound
         {
             Vec3d vec3d = new Vec3d(mc.player.posX, mc.player.posY, mc.player.posZ);
             BlockPos blockPos = audioData.getBlockPos();
-            distance = (float) vec3d.distanceTo(new Vec3d(blockPos.getX(), blockPos.getY(), blockPos.getZ()));
-            this.volume = (float) MathHelper.lerp(MathHelper.clamp((16 * 0.1) / (distance + .001), 0.01F, 1F), 0.01, 4);
-            LOGGER.debug("PosSound {}, dist {}, volume {}",audioData.getBlockPos(), distance, volume);
+            float distance = (float) vec3d.distanceTo(new Vec3d(blockPos.getX(), blockPos.getY(), blockPos.getZ()));
+            this.volume = (float) MathHelper.lerp(MathHelper.clamp((16 * 0.1) / (distance + .001), 0.0F, 1F), 0.0, 4);
+            LOGGER.debug("PosSound {}, dist {}, volume {}", audioData.getBlockPos(), distance, volume);
         }
     }
 }
