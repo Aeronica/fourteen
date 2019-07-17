@@ -1,11 +1,19 @@
 package net.aeronica.mods.fourteen.audio;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
+import org.apache.logging.log4j.LogManager;
+
+import javax.vecmath.Vector3d;
 
 public class MusicPositioned extends MxSound
 {
-
+    private static final org.apache.logging.log4j.Logger LOGGER = LogManager.getLogger();
+    Minecraft mc = Minecraft.getInstance();
+    private float distance = 0.0F;
     MusicPositioned(AudioData audioData)
     {
         super(audioData, SoundCategory.RECORDS);
@@ -23,6 +31,13 @@ public class MusicPositioned extends MxSound
     @Override
     protected void onUpdate()
     {
-        // NOP
+        if (audioData != null && audioData.getBlockPos() != null && mc.player != null)
+        {
+            Vec3d vec3d = new Vec3d(mc.player.posX, mc.player.posY, mc.player.posZ);
+            BlockPos blockPos = audioData.getBlockPos();
+            distance = (float) vec3d.distanceTo(new Vec3d(blockPos.getX(), blockPos.getY(), blockPos.getZ()));
+            this.volume = (float) MathHelper.lerp(MathHelper.clamp((16 * 0.1) / (distance + .001), 0.01F, 1F), 0.01, 4);
+            LOGGER.debug("PosSound {}, dist {}, volume {}",audioData.getBlockPos(), distance, volume);
+        }
     }
 }
