@@ -219,13 +219,13 @@ public class ClientAudio
     }
 
     // SoundEngine
-    // private final Map<ISound, ChannelManager.Entry> field_217942_m = Maps.newHashMap(); // AT this so we can attach the PCM the audio stream
+    // private final Map<ISound, ChannelManager.Entry> playingSoundsChannel = Maps.newHashMap(); // AT this so we can attach the PCM the audio stream
     // private final Multimap<SoundCategory, ISound> field_217943_n = HashMultimap.create(); // AT this for monitoring our ISounds
     // private final List<ITickableSound> tickableSounds = Lists.newArrayList(); // AT this for monitoring
     //
 
-    //    this.field_217939_i.func_217917_b(sound.getSoundAsOggLocation()).thenAccept((p_217928_1_) -> {
-    //        channelmanager$entry.func_217888_a((p_217935_1_) -> {
+    //    this.audioStreamManager.func_217917_b(sound.getSoundAsOggLocation()).thenAccept((p_217928_1_) -> {
+    //        channelmanager$entry.runOnSoundExecutor((p_217935_1_) -> {
     //            p_217935_1_.func_216433_a(p_217928_1_);
     //            p_217935_1_.func_216438_c();
     //            net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.client.event.sound.PlayStreamingSourceEvent(this, isound, p_217935_1_));
