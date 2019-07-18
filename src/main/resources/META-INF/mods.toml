@@ -18,7 +18,7 @@ version="${file.jarVersion}" #mandatory
  # A display name for the mod
 displayName="Fourteen Mod" #mandatory
 # A URL to query for updates for this mod. See the JSON update specification <here>
-updateJSONURL="https://gist.github.com/Aeronica/243e4bef821fe8e538bceb222d093297" #optional
+updateJSONURL="https://gist.githubusercontent.com/Aeronica/243e4bef821fe8e538bceb222d093297/raw/349813031279ae250dc9bfe93c54e29fc1c7ab81/fourteen_update.json" #optional
 # A URL for the "homepage" for this mod, displayed in the mod UI
 displayURL="https://github.com/Aeronica/fourteen" #optional
 # A file name (in the root of the mod JAR) containing a logo for display
