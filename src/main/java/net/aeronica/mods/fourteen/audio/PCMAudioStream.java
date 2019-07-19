@@ -10,7 +10,8 @@ import javax.sound.sampled.AudioInputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-import static net.aeronica.mods.fourteen.audio.ClientAudio.Status.*;
+import static net.aeronica.mods.fourteen.audio.ClientAudio.Status.ERROR;
+import static net.aeronica.mods.fourteen.audio.ClientAudio.Status.READY;
 
 public class PCMAudioStream implements IAudioStream
 {
@@ -102,7 +103,7 @@ public class PCMAudioStream implements IAudioStream
         } catch (IOException e)
         {
             audioDataSetStatus(ClientAudio.Status.ERROR);
-            return null;
+            throw new IOException(e);
         }
         zeroBuffer.flip();
         byteBuffer.flip();
