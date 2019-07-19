@@ -146,6 +146,16 @@ jar {
     }
 }
 
+processResources {
+    // Exclude the GIMP image files
+    exclude '**/*.xcf'
+
+    // Exclude the Cubik model files
+    exclude '**/*.bdc3D'
+
+    // Exclude the Paint.NET image files
+    exclude '**/*.pdn'
+}
 
 // Example configuration to allow publishing using the maven-publish task
 // we define a custom artifact that is sourced from the reobfJar output task
