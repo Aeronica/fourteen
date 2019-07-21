@@ -21,6 +21,7 @@ import com.google.common.collect.HashBiMap;
 import com.sun.media.sound.AudioSynthesizer;
 import net.aeronica.libs.mml.core.MMLUtil;
 import net.aeronica.mods.fourteen.Fourteen;
+import net.aeronica.mods.fourteen.Reference;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
@@ -45,7 +46,7 @@ public enum MIDISystemUtil
     private static boolean synthAvailable = false;
     private static boolean soundBankAvailable = false;
     private static boolean midiAvailable = false;
-    private static final ResourceLocation SOUND_FONT = new ResourceLocation(Fourteen.MODID, "synth/mxtune_v2.sf2");
+    private static final ResourceLocation SOUND_FONT = new ResourceLocation(Reference.MOD_ID, "synth/mxtune_v2.sf2");
     private static final List<Instrument> instrumentCache = new ArrayList<>();
     private static final BiMap<Integer, Integer> packedPresetToInstrumentCacheIndex =  HashBiMap.create();
     private static BiMap<Integer, Integer> instrumentCacheIndexToPackedPreset;

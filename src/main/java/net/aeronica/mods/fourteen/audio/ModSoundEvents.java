@@ -1,7 +1,7 @@
 package net.aeronica.mods.fourteen.audio;
 
 
-import net.aeronica.mods.fourteen.Fourteen;
+import net.aeronica.mods.fourteen.Reference;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.event.RegistryEvent;
@@ -10,7 +10,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ObjectHolder;
 
 
-@ObjectHolder(Fourteen.MODID)
+@ObjectHolder(Reference.MOD_ID)
 public class ModSoundEvents
 {
     @ObjectHolder("pcm-proxy")
@@ -27,11 +27,11 @@ public class ModSoundEvents
      */
     private static SoundEvent registerSound(String soundName)
     {
-        final ResourceLocation soundID = new ResourceLocation(Fourteen.MODID, soundName);
+        final ResourceLocation soundID = new ResourceLocation(Reference.MOD_ID, soundName);
         return new SoundEvent(soundID).setRegistryName(soundID);
     }
 
-    @Mod.EventBusSubscriber(modid = Fourteen.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
+    @Mod.EventBusSubscriber(modid = Reference.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistrationHandler
     {
         private RegistrationHandler() { /* NOP */ }

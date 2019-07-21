@@ -3,6 +3,7 @@ package net.aeronica.mods.fourteen.items;
 import net.aeronica.libs.mml.core.TestData;
 import net.aeronica.mods.fourteen.Fourteen;
 import net.aeronica.mods.fourteen.audio.ClientAudio;
+import net.aeronica.mods.fourteen.caps.LivingEntityModCapProvider;
 import net.aeronica.mods.fourteen.managers.PlayIdSupplier;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -33,6 +34,9 @@ public class MusicItem extends Item
         if (!worldIn.isRemote)
         {
             //worldIn.playSound(null, playerIn.getPosition(), SoundEvents.BLOCK_NOTE_BLOCK_COW_BELL, SoundCategory.PLAYERS, 1F, 1F);
+            LivingEntityModCapProvider.getLivingEntityModCap(playerIn).ifPresent(livingCap -> {
+                livingCap.setPlayId((int) worldIn.getDayTime());
+            });
         } else
         {
             ClientAudio.playLocal(PlayIdSupplier.PlayType.BACKGROUND.getAsInt(), TestData.MML14.getMML(), null);

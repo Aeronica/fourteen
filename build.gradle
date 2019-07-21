@@ -25,7 +25,7 @@ sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = co
 configurations {
     shade {}
     compile.extendsFrom(shade)
-    compileOnly.extendsFrom minecraft
+    //compileOnly.extendsFrom minecraft
 }
 
 minecraft {

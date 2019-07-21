@@ -4,16 +4,13 @@ import net.aeronica.mods.fourteen.audio.ClientAudio;
 import net.aeronica.mods.fourteen.blocks.ModBlocks;
 import net.aeronica.mods.fourteen.blocks.MusicBlock;
 import net.aeronica.mods.fourteen.items.MusicItem;
+import net.aeronica.mods.fourteen.setup.ModNetwork;
 import net.aeronica.mods.fourteen.setup.Setup;
 import net.aeronica.mods.fourteen.util.MIDISystemUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
-import net.minecraft.client.audio.ISoundEventListener;
-import net.minecraft.client.audio.Sound;
-import net.minecraft.item.*;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.event.sound.PlaySoundEvent;
-import net.minecraftforge.client.event.sound.SoundSetupEvent;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -22,30 +19,22 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 // The value here should match an entry in the META-INF/mods.toml file
-@Mod(Fourteen.MODID)
+@Mod(Reference.MOD_ID)
 public class Fourteen
 {
-    public static final String MODID = "fourteen";
 
     // Directly reference a log4j logger.
-    private static final Logger LOGGER = LogManager.getLogger(MODID);
+    private static final Logger LOGGER = LogManager.getLogger(Reference.MOD_ID);
 
     public static Setup setup = new Setup();
 
-    public static final String CHANNEL = MODID;
-    private static final String PROTOCOL_VERSION = "1.0";
-    public static SimpleChannel channel = NetworkRegistry.ChannelBuilder
-            .named(new ResourceLocation(MODID, CHANNEL))
-            .clientAcceptedVersions(PROTOCOL_VERSION::equals)
-            .serverAcceptedVersions(PROTOCOL_VERSION::equals)
-            .networkProtocolVersion(() -> PROTOCOL_VERSION)
-            .simpleChannel();
+    public static SimpleChannel network = ModNetwork.getNetworkChannel();
+
 
     public Fourteen() {
         // Register the setup method for modloading

@@ -1,7 +1,7 @@
 package net.aeronica.mods.fourteen.audio;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import net.aeronica.mods.fourteen.Fourteen;
+import net.aeronica.mods.fourteen.Reference;
 import net.aeronica.mods.fourteen.managers.PlayIdSupplier;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.*;
@@ -53,7 +53,7 @@ public class ClientAudio
         if (threadFactory == null)
         {
             threadFactory = new ThreadFactoryBuilder()
-                    .setNameFormat(Fourteen.MODID + " ClientAudio-%d")
+                    .setNameFormat(Reference.MOD_ID + " ClientAudio-%d")
                     .setDaemon(true)
                     .setPriority(Thread.NORM_PRIORITY)
                     .build();

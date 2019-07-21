@@ -1,9 +1,9 @@
 package net.aeronica.mods.fourteen.blocks;
 
-import net.aeronica.mods.fourteen.Fourteen;
+import net.aeronica.mods.fourteen.Reference;
 import net.minecraftforge.registries.ObjectHolder;
 
-@ObjectHolder(Fourteen.MODID)
+@ObjectHolder(Reference.MOD_ID)
 public class ModBlocks
 {
     private ModBlocks() { /* NOP */ }
