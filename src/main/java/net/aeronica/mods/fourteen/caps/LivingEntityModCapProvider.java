@@ -4,6 +4,7 @@ import net.aeronica.mods.fourteen.Reference;
 import net.aeronica.mods.fourteen.util.AntiNull;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.IntNBT;
 import net.minecraft.util.Direction;
@@ -64,11 +65,22 @@ public final class LivingEntityModCapProvider
         @SubscribeEvent
         public static void attachCapabilities(final AttachCapabilitiesEvent<Entity> event)
         {
-            if (event.getObject() instanceof LivingEntity)
+            if ((event.getObject() instanceof LivingEntity) && !(event.getObject() instanceof PlayerEntity))
             {
                 final LivingEntityModCap livingEntityModCap = new LivingEntityModCap((LivingEntity) event.getObject());
                 event.addCapability(ID, new SerializableCapabilityProvider<>(LIVING_ENTITY_MOD_CAP_CAPABILITY, null, livingEntityModCap));
                 LOGGER.debug("LivingEntityModCapProvider#attachCapabilities: {}", ((LivingEntity)event.getObject()));
+            }
+        }
+
+        @SubscribeEvent
+        public static void attachPlayerCapabilities(final AttachCapabilitiesEvent<Entity> event)
+        {
+            if (event.getObject() instanceof PlayerEntity)
+            {
+                final LivingEntityModCap livingEntityModCap = new LivingEntityModCap((PlayerEntity) event.getObject());
+                event.addCapability(ID, new SerializableCapabilityProvider<>(LIVING_ENTITY_MOD_CAP_CAPABILITY, null, livingEntityModCap));
+                LOGGER.debug("LivingEntityModCapProvider#attachPlayerCapabilities: {}", (event.getObject()));
             }
         }
 
@@ -83,7 +95,7 @@ public final class LivingEntityModCapProvider
             getLivingEntityModCap(event.getOriginal()).ifPresent(oldLivingEntityCap -> {
                 getLivingEntityModCap(event.getEntityPlayer()).ifPresent(newLivingEntityCap -> {
                     newLivingEntityCap.setPlayId(oldLivingEntityCap.getPlayId());
-                    LOGGER.debug("LivingEntityModCapProvider#PlayerEvent.Clone: {}", event.getEntityPlayer());
+                    LOGGER.debug("LivingEntityModCapProvider#PlayerEvent.Clone: oldPId:{}, newPId{}, {}",oldLivingEntityCap.getPlayId(), newLivingEntityCap.getPlayId() ,event.getEntityPlayer());
                 });
             });
         }

@@ -4,15 +4,13 @@ import net.aeronica.mods.fourteen.Fourteen;
 import net.aeronica.mods.fourteen.managers.PlayIdSupplier;
 import net.aeronica.mods.fourteen.network.LivingEntityModCapSync;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.nbt.IntNBT;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionType;
-import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 import javax.annotation.Nullable;
 
-public class LivingEntityModCap implements ILivingEntityModCap, INBTSerializable<IntNBT>
+public class LivingEntityModCap implements ILivingEntityModCap
 {
     private int playId = PlayIdSupplier.INVALID;
     private final LivingEntity entity;
@@ -35,17 +33,6 @@ public class LivingEntityModCap implements ILivingEntityModCap, INBTSerializable
         return playId;
     }
 
-    @Override
-    public IntNBT serializeNBT()
-    {
-        return new IntNBT(getPlayId());
-    }
-
-    @Override
-    public void deserializeNBT(IntNBT nbt)
-    {
-        playId = nbt.getInt();
-    }
 
     @Override
     public void synchronise()
