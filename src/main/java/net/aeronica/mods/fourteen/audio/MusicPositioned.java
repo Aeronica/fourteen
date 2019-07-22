@@ -11,6 +11,8 @@ public class MusicPositioned extends MxSound
 {
     private static final org.apache.logging.log4j.Logger LOGGER = LogManager.getLogger();
     private Minecraft mc = Minecraft.getInstance();
+    private int counter;
+    private float lastDistance;
 
     MusicPositioned(AudioData audioData)
     {
@@ -35,7 +37,11 @@ public class MusicPositioned extends MxSound
             BlockPos blockPos = audioData.getBlockPos();
             float distance = (float) vec3d.distanceTo(new Vec3d(blockPos.getX(), blockPos.getY(), blockPos.getZ()));
             this.volume = (float) MathHelper.clamp(MathHelper.lerp(MathHelper.clamp((4 / (distance + .001)), 0.0F, 1F), -1, 4), 0, 4);
-            LOGGER.debug("PosSound {}, dist {}, volume {}", audioData.getBlockPos(), distance, volume);
+            if ((counter++ % 20 == 0) && (distance != lastDistance))
+            {
+                LOGGER.debug("PosSound {}, dist {}, volume {}", audioData.getBlockPos(), distance, volume);
+                lastDistance = distance;
+            }
         }
     }
 }
