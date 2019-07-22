@@ -9,6 +9,7 @@ import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.IntNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.GameRules;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -92,10 +93,14 @@ public final class LivingEntityModCapProvider
         @SubscribeEvent
         public static void playerClone(final PlayerEvent.Clone event)
         {
+            event.getOriginal().revive(); // gighertz workaround for MCForge #5956 PlayerEvent.Clone Capability Provider is invalid
             getLivingEntityModCap(event.getOriginal()).ifPresent(oldLivingEntityCap -> {
                 getLivingEntityModCap(event.getEntityPlayer()).ifPresent(newLivingEntityCap -> {
-                    newLivingEntityCap.setPlayId(oldLivingEntityCap.getPlayId());
-                    LOGGER.debug("LivingEntityModCapProvider#PlayerEvent.Clone: oldPId:{}, newPId{}, {}",oldLivingEntityCap.getPlayId(), newLivingEntityCap.getPlayId() ,event.getEntityPlayer());
+                    if (!event.isWasDeath() || event.getEntityPlayer().world.getGameRules().getBoolean(GameRules.KEEP_INVENTORY) || event.getOriginal().isSpectator())
+                    {
+                        newLivingEntityCap.setPlayId(oldLivingEntityCap.getPlayId());
+                        LOGGER.debug("LivingEntityModCapProvider#PlayerEvent.Clone: oldPId:{}, newPId{}, {}", oldLivingEntityCap.getPlayId(), newLivingEntityCap.getPlayId(), event.getEntityPlayer());
+                    }
                 });
             });
         }
