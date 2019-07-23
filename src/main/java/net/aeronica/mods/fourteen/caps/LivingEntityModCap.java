@@ -1,12 +1,11 @@
 package net.aeronica.mods.fourteen.caps;
 
-import net.aeronica.mods.fourteen.Fourteen;
 import net.aeronica.mods.fourteen.managers.PlayIdSupplier;
 import net.aeronica.mods.fourteen.network.LivingEntityModCapSync;
+import net.aeronica.mods.fourteen.network.PacketDispatcher;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
-import net.minecraftforge.fml.network.PacketDistributor;
+import net.minecraft.world.dimension.Dimension;
 
 import javax.annotation.Nullable;
 
@@ -40,7 +39,7 @@ public class LivingEntityModCap implements ILivingEntityModCap
         if (entity == null) return;
         World world = entity.world;
         if (world.isRemote) return;
-        DimensionType dimensionType = world.dimension.getType();
-        Fourteen.network.send(PacketDistributor.DIMENSION.with(()->dimensionType), new LivingEntityModCapSync(playId));
+        Dimension dimension = world.dimension;
+        PacketDispatcher.sendToDimension(new LivingEntityModCapSync(playId), dimension);
     }
 }

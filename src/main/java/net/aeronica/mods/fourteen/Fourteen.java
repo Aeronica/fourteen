@@ -4,7 +4,7 @@ import net.aeronica.mods.fourteen.audio.ClientAudio;
 import net.aeronica.mods.fourteen.blocks.ModBlocks;
 import net.aeronica.mods.fourteen.blocks.MusicBlock;
 import net.aeronica.mods.fourteen.items.MusicItem;
-import net.aeronica.mods.fourteen.setup.ModNetwork;
+import net.aeronica.mods.fourteen.network.PacketDispatcher;
 import net.aeronica.mods.fourteen.setup.Setup;
 import net.aeronica.mods.fourteen.util.MIDISystemUtil;
 import net.minecraft.block.Block;
@@ -33,7 +33,7 @@ public class Fourteen
 
     public static Setup setup = new Setup();
 
-    public static SimpleChannel network = ModNetwork.getNetworkChannel();
+    public static SimpleChannel network = PacketDispatcher.getNetworkChannel();
 
 
     public Fourteen() {
