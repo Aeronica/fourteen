@@ -13,6 +13,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
 
+@SuppressWarnings("deprecation")
 public class MusicBlock extends Block
 {
     public MusicBlock()

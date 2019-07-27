@@ -2,6 +2,8 @@
   "itemGroup.fourteen": "Fourteen",
   "block.fourteen.musicblock": "Music Block",
   "item.fourteen.musicitem": "Music Item",
+  "item.fourteen.guimusictest": "GUI Test Item",
   "subtitle.fourteen.pcm-proxy": "Music Plays",
-  "fourteen.msu.no_sound_bank_loaded": "No Soundbank Loaded"
+  "fourteen.msu.no_sound_bank_loaded": "No Soundbank Loaded",
+  "screen.fourteen.test.title": "Test"
 }

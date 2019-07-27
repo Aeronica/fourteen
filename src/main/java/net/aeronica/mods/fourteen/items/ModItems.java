@@ -11,4 +11,7 @@ public class ModItems
     @ObjectHolder("musicitem")
     public static MusicItem MUSICITEM;
 
+    @ObjectHolder("guitestitem")
+    public static MusicItem GUITESTITEM;
+
 }
