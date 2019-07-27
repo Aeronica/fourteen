@@ -3,6 +3,9 @@ package net.aeronica.mods.fourteen;
 import net.aeronica.mods.fourteen.audio.ClientAudio;
 import net.aeronica.mods.fourteen.blocks.ModBlocks;
 import net.aeronica.mods.fourteen.blocks.MusicBlock;
+import net.aeronica.mods.fourteen.caches.FileHelper;
+import net.aeronica.mods.fourteen.config.FourteenConfig;
+import net.aeronica.mods.fourteen.items.GuiTestItem;
 import net.aeronica.mods.fourteen.items.MusicItem;
 import net.aeronica.mods.fourteen.network.PacketDispatcher;
 import net.aeronica.mods.fourteen.setup.Setup;
@@ -14,6 +17,7 @@ import net.minecraft.item.Item;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -30,13 +34,12 @@ public class Fourteen
 
     // Directly reference a log4j logger.
     private static final Logger LOGGER = LogManager.getLogger(Reference.MOD_ID);
-
     public static Setup setup = new Setup();
-
     public static SimpleChannel network = PacketDispatcher.getNetworkChannel();
 
-
-    public Fourteen() {
+    public Fourteen()
+    {
+        FourteenConfig.register(ModLoadingContext.get());
         // Register the setup method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         // Register the doClientStuff method for modloading
@@ -44,7 +47,6 @@ public class Fourteen
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
-        MinecraftForge.EVENT_BUS.register(ClientAudio.class);
     }
 
     private void setup(final FMLCommonSetupEvent event)
@@ -58,6 +60,7 @@ public class Fourteen
         // do something that can only be done on the client
         LOGGER.info("Got game settings {}", event.getMinecraftSupplier().get().gameSettings);
         MIDISystemUtil.mxTuneInit();
+        MinecraftForge.EVENT_BUS.register(ClientAudio.class);
     }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call
@@ -65,6 +68,7 @@ public class Fourteen
     public void onServerStarting(FMLServerStartingEvent event) {
         // do something when the server starts
         LOGGER.info("HELLO from server starting");
+        FileHelper.initialize(event.getServer());
     }
 
     // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
@@ -84,6 +88,7 @@ public class Fourteen
                     .group(setup.itemGroup);
             itemRegistryEvent.getRegistry().register(new BlockItem(ModBlocks.MUSICBLOCK, properties).setRegistryName("musicblock"));
             itemRegistryEvent.getRegistry().register(new MusicItem());
+            itemRegistryEvent.getRegistry().register(new GuiTestItem());
         }
     }
 }
