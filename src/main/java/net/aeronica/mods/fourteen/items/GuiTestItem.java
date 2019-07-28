@@ -1,12 +1,14 @@
 package net.aeronica.mods.fourteen.items;
 
-import net.aeronica.mods.fourteen.Fourteen;
-import net.aeronica.mods.fourteen.gui.TestScreen;
-import net.minecraft.client.Minecraft;
+import net.aeronica.mods.fourteen.network.OpenScreenMessage;
+import net.aeronica.mods.fourteen.network.PacketDispatcher;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemUseContext;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 import org.apache.logging.log4j.LogManager;
@@ -17,12 +19,9 @@ import javax.annotation.Nonnull;
 public class GuiTestItem extends Item
 {
     private static final Logger LOGGER = LogManager.getLogger();
-    public GuiTestItem()
+    public GuiTestItem(Item.Properties properties)
     {
-        super(new Properties()
-             .maxStackSize(1)
-             .group(Fourteen.setup.itemGroup));
-        setRegistryName("guitestitem");
+        super(properties);
     }
 
     @Nonnull
@@ -33,7 +32,7 @@ public class GuiTestItem extends Item
         {
             if (!playerIn.isSneaking())
             {
-                // nop
+                PacketDispatcher.sendTo(new OpenScreenMessage(OpenScreenMessage.SM.TEST_ONE), (ServerPlayerEntity) playerIn);
             }
             else
             {
@@ -42,9 +41,7 @@ public class GuiTestItem extends Item
 
         } else if (!playerIn.isSneaking())
         {
-            Minecraft mc = Minecraft.getInstance();
-            //mc.enqueue(()->mc.displayGuiScreen(new OptionsScreen(null, Minecraft.getInstance().gameSettings)));
-            mc.enqueue(()->mc.displayGuiScreen(new TestScreen(null)));
+            // nop
         } else
         {
             // nop
@@ -52,4 +49,9 @@ public class GuiTestItem extends Item
         return super.onItemRightClick(worldIn, playerIn, handIn);
     }
 
+    @Override
+    public ActionResultType onItemUse(ItemUseContext context)
+    {
+        return super.onItemUse(context);
+    }
 }

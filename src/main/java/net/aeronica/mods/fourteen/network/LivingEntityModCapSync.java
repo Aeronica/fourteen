@@ -14,7 +14,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-public class LivingEntityModCapSync implements IMessage
+public class LivingEntityModCapSync
 {
     private static final Logger LOGGER = LogManager.getLogger(Reference.MOD_ID);
     private final int playId;

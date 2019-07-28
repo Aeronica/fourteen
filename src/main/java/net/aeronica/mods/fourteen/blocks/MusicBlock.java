@@ -18,11 +18,10 @@ public class MusicBlock extends Block
 {
     public MusicBlock()
     {
-        super(Properties.create(Material.IRON)
+        super(Block.Properties.create(Material.IRON)
              .sound(SoundType.METAL)
              .hardnessAndResistance(2.0F)
              .lightValue(14));
-        setRegistryName("musicblock");
     }
 
     @Override

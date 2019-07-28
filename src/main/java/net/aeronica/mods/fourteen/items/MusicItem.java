@@ -1,7 +1,6 @@
 package net.aeronica.mods.fourteen.items;
 
 import net.aeronica.libs.mml.core.TestData;
-import net.aeronica.mods.fourteen.Fourteen;
 import net.aeronica.mods.fourteen.audio.ClientAudio;
 import net.aeronica.mods.fourteen.caps.ILivingEntityModCap;
 import net.aeronica.mods.fourteen.caps.LivingEntityModCapProvider;
@@ -23,12 +22,9 @@ public class MusicItem extends Item
     private static final Random rand = new Random();
     private static final Logger LOGGER = LogManager.getLogger();
     private static int lastPlayID;
-    public MusicItem()
+    public MusicItem(Item.Properties properties)
     {
-        super(new Item.Properties()
-             .maxStackSize(1)
-             .group(Fourteen.setup.itemGroup));
-        setRegistryName("musicitem");
+        super(properties);
     }
 
     @Nonnull
