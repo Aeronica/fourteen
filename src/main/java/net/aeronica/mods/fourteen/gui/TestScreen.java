@@ -23,7 +23,7 @@ public class TestScreen extends Screen
     public void init()
     {
         super.init();
-        this.addButton(new Button(this.width / 2 - 100, (this.height / 6 + 168) - 20, 200, 20, I18n.format("gui.open"), (done) -> {
+        this.addButton(new Button(this.width / 2 - 100, (this.height / 6 + 168) - 20, 200, 20, I18n.format("gui.fourteen.open"), (done) -> {
             this.minecraft.displayGuiScreen(new TestScreen(this));
             ++depth;
         }));
