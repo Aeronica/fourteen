@@ -18,8 +18,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.thread.EffectiveSide;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
@@ -44,7 +46,8 @@ public class Fourteen
         FourteenConfig.register(ModLoadingContext.get());
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientSetup);
-
+        if (EffectiveSide.get() == LogicalSide.CLIENT)
+            MIDISystemUtil.mxTuneInit();
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
     }
@@ -56,7 +59,7 @@ public class Fourteen
     }
 
     private void clientSetup(final FMLClientSetupEvent event) {
-        MIDISystemUtil.mxTuneInit();
+
         MinecraftForge.EVENT_BUS.register(ClientAudio.class);
     }
 

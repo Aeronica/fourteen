@@ -1,15 +1,14 @@
 package net.aeronica.mods.fourteen.network;
 
 import net.aeronica.mods.fourteen.Reference;
-import net.aeronica.mods.fourteen.gui.TestScreen;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.network.NetworkEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.function.Supplier;
+
+import static net.aeronica.mods.fourteen.gui.Handler.openTestScreen;
 
 public class OpenScreenMessage
 {
@@ -35,17 +34,16 @@ public class OpenScreenMessage
 
     public static void handle(final OpenScreenMessage message, final Supplier<NetworkEvent.Context> ctx)
     {
-        if (ctx.get().getDirection().getReceptionSide() == LogicalSide.CLIENT)
+        if (ctx.get().getDirection().getReceptionSide().isClient())
             ctx.get().enqueueWork(() ->
                 {
-                    Minecraft mc = Minecraft.getInstance();
                     switch (message.screen)
                     {
                         case TEST_ONE:
-                            mc.enqueue(()->mc.displayGuiScreen(new TestScreen(null)));
+                            openTestScreen();
                             break;
                         case TEST_TWO:
-                            mc.enqueue(()->mc.displayGuiScreen(new TestScreen(null)));
+                            openTestScreen();
                             break;
                     }
                 });

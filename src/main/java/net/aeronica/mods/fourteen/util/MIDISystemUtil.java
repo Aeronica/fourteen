@@ -22,7 +22,6 @@ import com.sun.media.sound.AudioSynthesizer;
 import net.aeronica.libs.mml.core.MMLUtil;
 import net.aeronica.mods.fourteen.Fourteen;
 import net.aeronica.mods.fourteen.Reference;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -39,7 +38,7 @@ public enum MIDISystemUtil
 {
     ;
     private static final Logger LOGGER = LogManager.getLogger();
-    private static final String NO_SOUND_BANK = I18n.format("fourteen.msu.no_sound_bank_loaded");
+    private static final String NO_SOUND_BANK = "No SoundBank Loaded"; //I18n.format("fourteen.msu.no_sound_bank_loaded");
     private static MidiDevice.Info bestSynthInfo = null;
     private static Synthesizer bestSynth = null;
     private static Soundbank mxTuneSoundBank = null;
