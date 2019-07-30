@@ -24,13 +24,10 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
 
 public class KeyHandler
 {
-    private static final Logger LOGGER = LogManager.getLogger();
     private static class KeyHandlerHolder {private static final KeyHandler INSTANCE = new KeyHandler();}
     public static KeyHandler getInstance() {return KeyHandlerHolder.INSTANCE;}
 
