@@ -70,6 +70,7 @@ public final class LivingEntityModCapProvider
             {
                 final LivingEntityModCap livingEntityModCap = new LivingEntityModCap((LivingEntity) event.getObject());
                 event.addCapability(ID, new SerializableCapabilityProvider<>(LIVING_ENTITY_MOD_CAP_CAPABILITY, null, livingEntityModCap));
+                event.addListener(()->getLivingEntityModCap((LivingEntity) event.getObject()).invalidate());
                 LOGGER.debug("LivingEntityModCapProvider#attachCapabilities: {}", ((LivingEntity)event.getObject()));
             }
         }
@@ -81,6 +82,7 @@ public final class LivingEntityModCapProvider
             {
                 final LivingEntityModCap livingEntityModCap = new LivingEntityModCap((PlayerEntity) event.getObject());
                 event.addCapability(ID, new SerializableCapabilityProvider<>(LIVING_ENTITY_MOD_CAP_CAPABILITY, null, livingEntityModCap));
+                event.addListener(()->getLivingEntityModCap((LivingEntity) event.getObject()).invalidate());
                 LOGGER.debug("LivingEntityModCapProvider#attachPlayerCapabilities: {}", (event.getObject()));
             }
         }
