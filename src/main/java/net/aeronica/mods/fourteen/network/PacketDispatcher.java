@@ -28,6 +28,9 @@ public class PacketDispatcher
 
     public static void register()
     {
+        // Bidirectional
+        registerMessage(SendKeyMessage.class, SendKeyMessage::encode, SendKeyMessage::decode, SendKeyMessage::handle);
+        // To Client(s)
         registerMessage(LivingEntityModCapSync.class, LivingEntityModCapSync::encode, LivingEntityModCapSync::decode, LivingEntityModCapSync::handle);
         registerMessage(OpenScreenMessage.class, OpenScreenMessage::encode, OpenScreenMessage::decode, OpenScreenMessage::handle);
     }

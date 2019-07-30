@@ -9,6 +9,7 @@ import net.aeronica.mods.fourteen.items.GuiTestItem;
 import net.aeronica.mods.fourteen.items.MusicItem;
 import net.aeronica.mods.fourteen.network.PacketDispatcher;
 import net.aeronica.mods.fourteen.util.AntiNull;
+import net.aeronica.mods.fourteen.util.KeyHandler;
 import net.aeronica.mods.fourteen.util.MIDISystemUtil;
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
@@ -58,8 +59,9 @@ public class Fourteen
         LivingEntityModCapProvider.register();
     }
 
-    private void clientSetup(final FMLClientSetupEvent event) {
-
+    private void clientSetup(final FMLClientSetupEvent event)
+    {
+        MinecraftForge.EVENT_BUS.register(KeyHandler.getInstance());
         MinecraftForge.EVENT_BUS.register(ClientAudio.class);
     }
 
