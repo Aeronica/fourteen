@@ -28,6 +28,7 @@ import org.lwjgl.glfw.GLFW;
 
 public class KeyHandler
 {
+    private static Minecraft mc = Minecraft.getInstance();
     private static class KeyHandlerHolder {private static final KeyHandler INSTANCE = new KeyHandler();}
     public static KeyHandler getInstance() {return KeyHandlerHolder.INSTANCE;}
 
@@ -39,12 +40,15 @@ public class KeyHandler
     {
         ClientRegistry.registerKeyBinding(keyOpenPartyGUI);
         ClientRegistry.registerKeyBinding(keyOpenMusicOptionsGUI);
-        Minecraft.getInstance().gameSettings.loadOptions();
+        mc.gameSettings.loadOptions();
     }
 
     @SubscribeEvent
     public void tick(InputEvent.KeyInputEvent event)
     {
+        // If the player or world is null we must not try to send packets to the server!
+        if (mc.player == null || mc.player.world == null) return;
+
         int key = event.getKey();
         boolean isDown = event.getAction() == (GLFW.GLFW_PRESS & GLFW.GLFW_REPEAT);
         if (keyOpenPartyGUI.isPressed())

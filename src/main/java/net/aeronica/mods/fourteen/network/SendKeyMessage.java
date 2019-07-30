@@ -34,15 +34,15 @@ public class SendKeyMessage
 
     public SendKeyMessage(final String kb) { this.keyBindingDesc = kb; }
 
-    public static SendKeyMessage decode(PacketBuffer buffer)
+    public static SendKeyMessage decode(final PacketBuffer buffer)
     {
-        String keyBindingDesc = buffer.readString();
+        String keyBindingDesc = buffer.readString(64);
         return new SendKeyMessage(keyBindingDesc);
     }
 
     public static void encode(final SendKeyMessage message, final PacketBuffer buffer)
     {
-        buffer.writeString(message.keyBindingDesc);
+        buffer.writeString(message.keyBindingDesc, 64);
     }
 
     public static void handle(final SendKeyMessage message, final Supplier<NetworkEvent.Context> ctx)

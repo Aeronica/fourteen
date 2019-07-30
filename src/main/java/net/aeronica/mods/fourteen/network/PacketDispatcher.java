@@ -64,7 +64,7 @@ public class PacketDispatcher
      * Send this message to everyone within a certain range of a point. See
      * {@link SimpleChannel#send(PacketDistributor.PacketTarget, Object)}
      */
-    public static <MSG>void sendToAllAround(MSG message, PacketDistributor.TargetPoint point)
+    public static <MSG> void sendToAllAround(MSG message, PacketDistributor.TargetPoint point)
     {
         HANDLER.send(PacketDistributor.NEAR.with(()->point), message);
     }
@@ -74,7 +74,7 @@ public class PacketDispatcher
      * the same dimension. Shortcut to
      * {@link PacketDispatcher#sendToAllAround(MSG, PacketDistributor.TargetPoint)}
      */
-    public static <MSG>void sendToAllAround(MSG message, Dimension dimension, double x, double y, double z, double range)
+    public static <MSG> void sendToAllAround(MSG message, Dimension dimension, double x, double y, double z, double range)
     {
         sendToAllAround(message, new PacketDistributor.TargetPoint(x, y, z, range, dimension.getType()));
     }
@@ -84,7 +84,7 @@ public class PacketDispatcher
      * provided. Shortcut to
      * {@link PacketDispatcher#sendToAllAround(MSG, Dimension, double, double, double, double)}
      */
-    public static <MSG>void sendToAllAround(MSG message, PlayerEntity player, double range)
+    public static <MSG> void sendToAllAround(MSG message, PlayerEntity player, double range)
     {
         sendToAllAround(message, player.getEntityWorld().getDimension(), player.posX, player.posY, player.posZ, range);
     }
@@ -93,7 +93,7 @@ public class PacketDispatcher
      * Send this message to everyone within the supplied dimension. See
      * {@link SimpleChannel#send(PacketDistributor.PacketTarget, Object)}
      */
-    public static <MSG>void sendToDimension(MSG message, Dimension dimension)
+    public static <MSG> void sendToDimension(MSG message, Dimension dimension)
     {
         HANDLER.send(PacketDistributor.DIMENSION.with(dimension::getType), message);
     }
@@ -102,7 +102,7 @@ public class PacketDispatcher
      * Send this message to the server. See
      * {@link SimpleChannel#sendToServer(Object)}
      */
-    public static <MSG>void sendToServer(MSG message)
+    public static <MSG> void sendToServer(MSG message)
     {
         HANDLER.sendToServer(message);
     }
