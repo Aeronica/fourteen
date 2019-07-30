@@ -91,6 +91,6 @@ public class Fourteen
     @ObjectHolder(Reference.MOD_ID)
     public static class ObjectHolders
     {
-        public final static MusicBlock MUSICBLOCK = AntiNull.nonNullInjected();
+        public final static Block MUSICBLOCK = AntiNull.nonNullInjected();
     }
 }
