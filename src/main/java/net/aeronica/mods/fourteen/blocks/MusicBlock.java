@@ -13,9 +13,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
 
+import java.util.Random;
+
 @SuppressWarnings("deprecation")
 public class MusicBlock extends Block
 {
+    private static final Random rand = new Random();
+
     public MusicBlock()
     {
         super(Block.Properties.create(Material.IRON)
@@ -32,7 +36,7 @@ public class MusicBlock extends Block
             // worldIn.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_COW_BELL, SoundCategory.BLOCKS, 1F, 2F);
         } else
         {
-            ClientAudio.play(PlayIdSupplier.PlayType.PLAYERS.getAsInt(), pos, TestData.MML10.getMML());
+            ClientAudio.play(PlayIdSupplier.PlayType.PLAYERS.getAsInt(), pos, TestData.getMML(rand.nextInt(TestData.values().length)).getMML());
         }
         return true;
     }

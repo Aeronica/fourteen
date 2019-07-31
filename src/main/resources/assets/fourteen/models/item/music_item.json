@@ -2,6 +2,6 @@
 {
   "parent": "item/handheld",
   "textures": {
-    "layer0": "fourteen:item/guitestitem"
+    "layer0": "fourteen:item/music_item"
   }
 }

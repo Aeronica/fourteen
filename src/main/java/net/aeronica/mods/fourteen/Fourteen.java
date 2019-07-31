@@ -35,10 +35,10 @@ import org.apache.logging.log4j.Logger;
 public class Fourteen
 {
     private static final Logger LOGGER = LogManager.getLogger(Reference.MOD_ID);
-    private static final ItemGroup tab = new ItemGroup(Reference.MOD_ID) {
+    private static final ItemGroup MOD_TAB = new ItemGroup(Reference.MOD_ID) {
         @Override
         public ItemStack createIcon() {
-            return new ItemStack(ObjectHolders.MUSICBLOCK);
+            return new ItemStack(ObjectHolders.MUSIC_BLOCK);
         }
     };
 
@@ -74,23 +74,23 @@ public class Fourteen
     public static class RegistryEvents {
         @SubscribeEvent
         public static void onBlocksRegistry(final RegistryEvent.Register<Block> blockRegistryEvent) {
-            blockRegistryEvent.getRegistry().register(new MusicBlock().setRegistryName("musicblock"));
+            blockRegistryEvent.getRegistry().register(new MusicBlock().setRegistryName("music_block"));
         }
 
         @SubscribeEvent
         public static void onItemsRegistry(final RegistryEvent.Register<Item> itemRegistryEvent)
         {
-            Item.Properties properties = new Item.Properties().maxStackSize(1).group(tab);
+            Item.Properties properties = new Item.Properties().maxStackSize(1).group(MOD_TAB);
 
-            itemRegistryEvent.getRegistry().register(new BlockItem(ObjectHolders.MUSICBLOCK, properties).setRegistryName("musicblock"));
-            itemRegistryEvent.getRegistry().register(new MusicItem(properties).setRegistryName("musicitem"));
-            itemRegistryEvent.getRegistry().register(new GuiTestItem(properties).setRegistryName("guitestitem"));
+            itemRegistryEvent.getRegistry().register(new BlockItem(ObjectHolders.MUSIC_BLOCK, new Item.Properties().maxStackSize(64).group(MOD_TAB)).setRegistryName("music_block"));
+            itemRegistryEvent.getRegistry().register(new MusicItem(properties).setRegistryName("music_item"));
+            itemRegistryEvent.getRegistry().register(new GuiTestItem(properties).setRegistryName("gui_test_item"));
         }
     }
 
     @ObjectHolder(Reference.MOD_ID)
     public static class ObjectHolders
     {
-        public final static Block MUSICBLOCK = AntiNull.nonNullInjected();
+        public final static Block MUSIC_BLOCK = AntiNull.nonNullInjected();
     }
 }

@@ -1,6 +1,6 @@
 {
   "parent": "block/cube_all",
   "textures": {
-    "all": "fourteen:block/musicblock"
+    "all": "fourteen:block/music_block"
   }
 }
