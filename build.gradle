@@ -24,7 +24,7 @@ sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = co
 // So that means there is a potential for class conflicts unless I write my own MML lexer/parser.
 configurations {
     shade {}
-    //compile.extendsFrom(shade)
+    compile.extendsFrom(shade)
     //compileOnly.extendsFrom minecraft
 }
 
