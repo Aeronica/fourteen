@@ -5,12 +5,12 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3+', changing: true
     }
 }
 apply plugin: 'net.minecraftforge.gradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
-apply plugin: 'idea'
+// apply plugin: 'idea'
 apply plugin: 'maven-publish'
 
 version = '1.0.0'
@@ -23,9 +23,7 @@ sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = co
 // Can't use the shadow plugin because it can't deal with the transitive runtime junk from forge.
 // So that means there is a potential for class conflicts unless I write my own MML lexer/parser.
 configurations {
-    shade {}
-    compile.extendsFrom(shade)
-    //compileOnly.extendsFrom minecraft
+    compileOnly.extendsFrom minecraft
 }
 
 minecraft {
@@ -102,10 +100,10 @@ dependencies {
     // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
     // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
-    minecraft 'net.minecraftforge:forge:1.14.4-28.0.27'
+    minecraft 'net.minecraftforge:forge:1.14.4-28.0.40'
 
     compile 'org.antlr:antlr4-runtime:4.7.2' // use ANTLR version 4
-    shade 'org.antlr:antlr4-runtime:4.7.2' // use ANTLR version 4
+//    shade 'org.antlr:antlr4-runtime:4.7.2' // use ANTLR version 4
     // You may put jars on which you depend on in ./libs or you may define them like so..
     // compile "some.group:artifact:version:classifier"
     // compile "some.group:artifact:version"
@@ -144,11 +142,11 @@ jar {
             "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
-    configurations.shade.each { dep ->
-        from(project.zipTree(dep)){
-            exclude 'META-INF', 'META-INF/**'
-        }
-    }
+//    configurations.shade.each { dep ->
+//        from(project.zipTree(dep)){
+//            exclude 'META-INF', 'META-INF/**'
+//        }
+//    }
 }
 
 processResources {
@@ -178,18 +176,18 @@ def reobfArtifact = artifacts.add('default', reobfFile) {
     type 'jar'
     builtBy 'reobfJar'
 }
-//publishing {
-//    publications {
-//        mavenJava(MavenPublication) {
-//            artifact reobfArtifact
-//        }
-//    }
-//    repositories {
-//        maven {
-//            url "file:///${project.projectDir}/mcmodsrepo"
-//        }
-//    }
-//}
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifact reobfArtifact
+        }
+    }
+    repositories {
+        maven {
+            url "file:///${project.projectDir}/mcmodsrepo"
+        }
+    }
+}
 
 task sourcesJar(type: Jar, dependsOn: classes) {
     classifier = 'sources'
@@ -198,41 +196,4 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 
 artifacts {
     archives sourcesJar
-}
-
-task updateMappings() {
-
-    def remapped = file('src_remapped/main/java/net/aeronica/mods/fourteen')
-    def methods = file('methods.csv')
-    def fields = file('fields.csv')
-    def source = relativeProjectPath('src/main/java/net/aeronica/mods/fourteen')
-
-    doLast {
-
-        Map<String, String> map = new HashMap<>()
-        methods.eachLine {line ->
-            String[] pts = line.split(",")
-            map.put(pts[0], pts[1])
-        }
-        fields.eachLine {line ->
-            String[] pts = line.split(",")
-            map.put(pts[0], pts[1])
-        }
-
-        copy {
-            from source
-            into remapped
-            include '**/*.java'
-
-            filter { javaLine ->
-                map.entrySet().each { entry ->
-                    javaLine = javaLine.replace(entry.getKey(), entry.getValue())
-                }
-                return javaLine
-            }
-
-            includeEmptyDirs = false
-            eachFile { println "Processing: $it.name" }
-        }
-    }
 }
