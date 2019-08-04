@@ -1,6 +1,7 @@
 {
   "itemGroup.fourteen": "Fourteen",
   "block.fourteen.music_block": "Music Block",
+  "block.fourteen.inv_test_block": "Inventory Test Block",
   "item.fourteen.music_item": "Music Item",
   "item.fourteen.gui_test_item": "GUI Test Item",
   "subtitle.fourteen.pcm-proxy": "Music Plays",

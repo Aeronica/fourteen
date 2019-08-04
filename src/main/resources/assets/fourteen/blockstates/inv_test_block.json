@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "fourteen:block/inv_test_block" },
+    "facing=south": { "model": "fourteen:block/inv_test_block", "y": 180 },
+    "facing=west": { "model": "fourteen:block/inv_test_block", "y": 270 },
+    "facing=east": { "model": "fourteen:block/inv_test_block", "y": 90 }
+  }
+}

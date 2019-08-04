@@ -1,7 +1,7 @@
 package net.aeronica.mods.fourteen;
 
 import net.aeronica.mods.fourteen.audio.ClientAudio;
-import net.aeronica.mods.fourteen.blocks.MusicBlock;
+import net.aeronica.mods.fourteen.blocks.*;
 import net.aeronica.mods.fourteen.caches.FileHelper;
 import net.aeronica.mods.fourteen.caps.LivingEntityModCapProvider;
 import net.aeronica.mods.fourteen.config.FourteenConfig;
@@ -12,11 +12,18 @@ import net.aeronica.mods.fourteen.util.AntiNull;
 import net.aeronica.mods.fourteen.util.KeyHandler;
 import net.aeronica.mods.fourteen.util.MIDISystemUtil;
 import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
+import net.minecraft.block.material.Material;
+import net.minecraft.client.gui.ScreenManager;
+import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
@@ -61,6 +68,7 @@ public class Fourteen
 
     private void clientSetup(final FMLClientSetupEvent event)
     {
+        ScreenManager.registerFactory(ObjectHolders.INV_TEST_CONTAINER, InvTestScreen::new);
         MinecraftForge.EVENT_BUS.register(KeyHandler.getInstance());
         MinecraftForge.EVENT_BUS.register(ClientAudio.class);
     }
@@ -75,6 +83,7 @@ public class Fourteen
         @SubscribeEvent
         public static void onBlocksRegistry(final RegistryEvent.Register<Block> blockRegistryEvent) {
             blockRegistryEvent.getRegistry().register(new MusicBlock().setRegistryName("music_block"));
+            blockRegistryEvent.getRegistry().register(new InvTestBlock(Block.Properties.create(Material.WOOD).hardnessAndResistance(1.5F)).setRegistryName("inv_test_block"));
         }
 
         @SubscribeEvent
@@ -85,12 +94,29 @@ public class Fourteen
             itemRegistryEvent.getRegistry().register(new BlockItem(ObjectHolders.MUSIC_BLOCK, new Item.Properties().maxStackSize(64).group(MOD_TAB)).setRegistryName("music_block"));
             itemRegistryEvent.getRegistry().register(new MusicItem(properties).setRegistryName("music_item"));
             itemRegistryEvent.getRegistry().register(new GuiTestItem(properties).setRegistryName("gui_test_item"));
+            itemRegistryEvent.getRegistry().register(new BlockItem(ObjectHolders.INV_TEST_BLOCK, new Item.Properties().maxStackSize(64).group(MOD_TAB)).setRegistryName("inv_test_block"));
+        }
+
+        @SubscribeEvent
+        public static void registerContainers(RegistryEvent.Register<ContainerType<?>> event)
+        {
+            event.getRegistry().register(IForgeContainerType.create((windowId, inv, data) -> new InvTestContainer(windowId, inv.player.world, data.readBlockPos(), inv, inv.player)).setRegistryName("inv_test_container"));
+        }
+
+        @SubscribeEvent
+        public static void registerTiles(RegistryEvent.Register<TileEntityType<?>> event)
+        {
+            event.getRegistry().register(TileEntityType.Builder.create(InvTestTile::new, ObjectHolders.INV_TEST_BLOCK).build(AntiNull.nonNullInjected()).setRegistryName("inv_test_tile"));
         }
     }
 
     @ObjectHolder(Reference.MOD_ID)
     public static class ObjectHolders
     {
-        public final static Block MUSIC_BLOCK = AntiNull.nonNullInjected();
+        public static final Block MUSIC_BLOCK = AntiNull.nonNullInjected();
+
+        public static final Block INV_TEST_BLOCK = AntiNull.nonNullInjected();
+        public static final ContainerType<InvTestContainer> INV_TEST_CONTAINER = AntiNull.nonNullInjected();
+        public static final TileEntityType<InvTestTile> INV_TEST_TILE = AntiNull.nonNullInjected();
     }
 }
