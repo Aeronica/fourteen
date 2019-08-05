@@ -50,6 +50,7 @@ public class InvTestContainer extends Container
         return isWithinUsableDistance(IWorldPosCallable.of(tileEntity.getWorld(), tileEntity.getPos()), playerEntity, Fourteen.ObjectHolders.INV_TEST_BLOCK);
     }
 
+    // Transfer the item in test slot to-from any other open slot
     @Override
     public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
         ItemStack itemstack = ItemStack.EMPTY;
@@ -57,32 +58,21 @@ public class InvTestContainer extends Container
         if (slot != null && slot.getHasStack()) {
             ItemStack stack = slot.getStack();
             itemstack = stack.copy();
-            if (index == 0) {
-                if (!this.mergeItemStack(stack, 1, 37, true)) {
+            if (index == 0)
+            {
+                if (!this.mergeItemStack(stack, 1, 37, false))
                     return ItemStack.EMPTY;
-                }
                 slot.onSlotChange(stack, itemstack);
-            } else {
-                if (index < 28) {
-                    if (!this.mergeItemStack(stack, 28, 37, false)) {
-                        return ItemStack.EMPTY;
-                    }
-                } else if (index < 37 && !this.mergeItemStack(stack, 1, 28, false)) {
-                    return ItemStack.EMPTY;
-                }
             }
-
+            else if (!this.mergeItemStack(stack, 0, 1, false))
+            {
+                return ItemStack.EMPTY;
+            }
             if (stack.isEmpty()) {
                 slot.putStack(ItemStack.EMPTY);
             } else {
                 slot.onSlotChanged();
             }
-
-            if (stack.getCount() == itemstack.getCount()) {
-                return ItemStack.EMPTY;
-            }
-
-            slot.onTake(playerIn, stack);
         }
         return itemstack;
     }
