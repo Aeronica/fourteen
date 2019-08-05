@@ -8,9 +8,9 @@ import net.minecraft.client.audio.*;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.client.event.sound.*;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

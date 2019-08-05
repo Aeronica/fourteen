@@ -23,7 +23,6 @@ import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
 
-import static net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
 
 public final class LivingEntityModCapProvider
 {
@@ -113,7 +112,7 @@ public final class LivingEntityModCapProvider
          * @param event The event
          */
         @SubscribeEvent
-        public static void playerChangeDimension(final PlayerChangedDimensionEvent event)
+        public static void playerChangeDimension(final PlayerEvent.PlayerChangedDimensionEvent event)
         {
             getLivingEntityModCap(event.getPlayer()).ifPresent(ILivingEntityModCap::synchronise);
             LOGGER.debug("LivingEntityModCapProvider#PlayerChangedDimensionEvent: {}", event.getPlayer());
