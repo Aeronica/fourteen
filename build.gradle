@@ -15,7 +15,7 @@ apply plugin: 'maven-publish'
 
 version = '1.0.0'
 group = 'net.aeronica.mods.fourteen' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = 'Fourteen-1.14.3'
+archivesBaseName = 'Fourteen-1.14.4'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
