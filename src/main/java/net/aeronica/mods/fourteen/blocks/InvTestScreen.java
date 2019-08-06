@@ -2,7 +2,6 @@ package net.aeronica.mods.fourteen.blocks;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.aeronica.mods.fourteen.Reference;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
@@ -26,7 +25,8 @@ public class InvTestScreen extends ContainerScreen<InvTestContainer>
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        drawString(Minecraft.getInstance().fontRenderer, "Type: " + title.getFormattedText(), 10, 10, 0xffffff);
+        this.font.drawString(container.getName().getUnformattedComponentText(), 10, 8, 4210752);
+        this.font.drawString(this.playerInventory.getDisplayName().getFormattedText(), 10, 58, 4210752);
     }
 
     @Override

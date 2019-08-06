@@ -9,6 +9,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -43,6 +45,13 @@ public class InvTestContainer extends Container
         for (int i = 0; i < 9; i++) {
             this.addSlot(new Slot(playerInventory, i, i * 18 + guiX, guiY + 58));
         }
+    }
+
+    public ITextComponent getName()
+    {
+        if (tileEntity != null && tileEntity.getWorld().isRemote)
+            return ((InvTestTile)tileEntity).getName();
+        return new StringTextComponent("");
     }
 
     @Override
