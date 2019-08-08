@@ -15,7 +15,10 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
+import net.minecraft.util.Hand;
+import net.minecraft.util.Mirror;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
@@ -37,7 +40,6 @@ public class InvTestBlock extends Block
     public InvTestBlock(Properties properties)
     {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH));
     }
 
     @Override
@@ -112,10 +114,6 @@ public class InvTestBlock extends Block
             itemstack.setTagInfo("BlockEntityTag", compoundnbt);
         }
         return itemstack;
-    }
-
-    public static Direction getFacingFromEntity(BlockPos clickedBlock, LivingEntity entity) {
-        return Direction.getFacingFromVector((float) (entity.posX - clickedBlock.getX()), (float) (entity.posY - clickedBlock.getY()), (float) (entity.posZ - clickedBlock.getZ()));
     }
 
     @Override
