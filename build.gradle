@@ -49,11 +49,13 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
             ideaModule "${project.name}.main"
 
-            mods {
-                fourteen {
-                    source sourceSets.main
-                }
-            }
+            environment 'MOD_CLASSES', "${project.file("out/production/resources").canonicalPath};${project.file("out/production/classes").canonicalPath}"
+
+//            mods {
+//                fourteen {
+//                    source sourceSets.main
+//                }
+//            }
         }
 
         server {
@@ -65,11 +67,12 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
             ideaModule "${project.name}.main"
 
-            mods {
-                fourteen {
-                    source sourceSets.main
-                }
-            }
+            environment 'MOD_CLASSES', "${project.file("out/production/resources").canonicalPath};${project.file("out/production/classes").canonicalPath}"
+//            mods {
+//                fourteen {
+//                    source sourceSets.main
+//                }
+//            }
         }
 
         data {
