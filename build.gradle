@@ -47,15 +47,14 @@ minecraft {
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
-            ideaModule "${project.name}.main"
+            ideaModule "${project.name}_main"
 
-            environment 'MOD_CLASSES', "${project.file("out/production/resources").canonicalPath};${project.file("out/production/classes").canonicalPath}"
-
-//            mods {
-//                fourteen {
-//                    source sourceSets.main
-//                }
-//            }
+//            environment 'MOD_CLASSES', "${project.file("out/production/resources").canonicalPath};${project.file("out/production/classes").canonicalPath}"
+            mods {
+                fourteen {
+                    source sourceSets.main
+                }
+            }
         }
 
         server {
@@ -65,14 +64,14 @@ minecraft {
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
-            ideaModule "${project.name}.main"
+            ideaModule "${project.name}_main"
 
-            environment 'MOD_CLASSES', "${project.file("out/production/resources").canonicalPath};${project.file("out/production/classes").canonicalPath}"
-//            mods {
-//                fourteen {
-//                    source sourceSets.main
-//                }
-//            }
+//            environment 'MOD_CLASSES', "${project.file("out/production/resources").canonicalPath};${project.file("out/production/classes").canonicalPath}"
+            mods {
+                fourteen {
+                    source sourceSets.main
+                }
+            }
         }
 
         data {
@@ -103,7 +102,7 @@ dependencies {
     // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
     // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
-    minecraft 'net.minecraftforge:forge:1.14.4-28.0.49'
+    minecraft 'net.minecraftforge:forge:1.14.4-28.0.75'
 
     compile 'org.antlr:antlr4-runtime:4.7.2' // use ANTLR version 4
 //    shade 'org.antlr:antlr4-runtime:4.7.2' // use ANTLR version 4
