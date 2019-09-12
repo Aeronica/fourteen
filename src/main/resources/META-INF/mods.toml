@@ -29,7 +29,7 @@ credits="Thanks for this example mod goes to the cosmos" #optional
 authors="Cosmos, Sun, Moon and Earth" #optional
 # The description text for the mod (multi line!) (#mandatory)
 description='''
-Just a silly MC/Forge 1.14.3+ Test Mod
+Just a silly MC/Forge 1.14.4+ Test Mod
 '''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies.fourteen]] #optional
