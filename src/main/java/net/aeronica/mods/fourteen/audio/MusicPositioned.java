@@ -33,7 +33,7 @@ public class MusicPositioned extends MxSound
     {
         if (audioData != null && audioData.getBlockPos() != null && mc.player != null)
         {
-            Vec3d vec3d = new Vec3d(mc.player.posX, mc.player.posY, mc.player.posZ);
+            Vec3d vec3d = new Vec3d(mc.player.getPosition().getX(), mc.player.getPosition().getY(), mc.player.getPosition().getZ());
             BlockPos blockPos = audioData.getBlockPos();
             float distance = (float) vec3d.distanceTo(new Vec3d(blockPos.getX(), blockPos.getY(), blockPos.getZ()));
             this.volume = (float) MathHelper.clamp(MathHelper.lerp(MathHelper.clamp((4 / (distance + .001)), 0.0F, 1F), -1, 4), 0, 4);

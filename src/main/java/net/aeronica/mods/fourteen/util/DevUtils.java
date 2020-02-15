@@ -37,7 +37,7 @@ public class DevUtils
 
                 if (lastShowPlayerNameState != FourteenConfig.CLIENT.showPlayerName.get())
                 {
-                    long handle = mc.mainWindow.getHandle();
+                    long handle = mc.func_228018_at_().getHandle();
                     GLFW.glfwSetWindowTitle(handle, windowTitle);
                     lastShowPlayerNameState = FourteenConfig.CLIENT.showPlayerName.get();
                 }

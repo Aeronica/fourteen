@@ -24,9 +24,9 @@ public class MovingMusic extends MxSound
         super(audioData, SoundCategory.PLAYERS);
         this.entity = entity;
         this.donePlaying = false;
-        this.x = (float) entity.posX;
-        this.y = (float) entity.posY;
-        this.z = (float) entity.posZ;
+        this.x = (float) entity.getPosition().getX();
+        this.y = (float) entity.getPosition().getY();
+        this.z = (float) entity.getPosition().getZ();
         LOGGER.debug("MovingMusic entity {}", entity.getName().getUnformattedComponentText());
     }
 
@@ -40,9 +40,9 @@ public class MovingMusic extends MxSound
             LOGGER.debug("MovingMusic playID {} done", playID);
         } else
         {
-            this.x = (float) entity.posX;
-            this.y = (float) entity.posY;
-            this.z = (float) entity.posZ;
+            this.x = (float) entity.getPosition().getX();
+            this.y = (float) entity.getPosition().getY();
+            this.z = (float) entity.getPosition().getZ();
         }
     }
 }

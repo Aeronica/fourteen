@@ -43,7 +43,7 @@ public final class LivingEntityModCapProvider
             @Override
             public INBT writeNBT(final Capability<ILivingEntityModCap> capability, final ILivingEntityModCap instance, final Direction side)
             {
-                return new IntNBT(instance.getPlayId());
+                return IntNBT.func_229692_a_(instance.getPlayId());
             }
 
             @Override
@@ -96,11 +96,11 @@ public final class LivingEntityModCapProvider
         {
             event.getOriginal().revive(); // gighertz workaround for MCForge #5956 PlayerEvent.Clone Capability Provider is invalid
             getLivingEntityModCap(event.getOriginal()).ifPresent(oldLivingEntityCap -> {
-                getLivingEntityModCap(event.getEntityPlayer()).ifPresent(newLivingEntityCap -> {
-                    if (!event.isWasDeath() || event.getEntityPlayer().world.getGameRules().getBoolean(GameRules.KEEP_INVENTORY) || event.getOriginal().isSpectator())
+                getLivingEntityModCap(event.getPlayer()).ifPresent(newLivingEntityCap -> {
+                    if (!event.isWasDeath() || event.getPlayer().world.getGameRules().getBoolean(GameRules.KEEP_INVENTORY) || event.getOriginal().isSpectator())
                     {
                         newLivingEntityCap.setPlayId(oldLivingEntityCap.getPlayId());
-                        LOGGER.debug("LivingEntityModCapProvider#PlayerEvent.Clone: oldPId:{}, newPId{}, {}", oldLivingEntityCap.getPlayId(), newLivingEntityCap.getPlayId(), event.getEntityPlayer());
+                        LOGGER.debug("LivingEntityModCapProvider#PlayerEvent.Clone: oldPId:{}, newPId{}, {}", oldLivingEntityCap.getPlayId(), newLivingEntityCap.getPlayId(), event.getPlayer());
                     }
                 });
             });
