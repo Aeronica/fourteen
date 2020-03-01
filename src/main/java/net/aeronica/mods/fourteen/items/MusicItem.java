@@ -33,7 +33,7 @@ public class MusicItem extends Item
     {
         if (!worldIn.isRemote)
         {
-            if (!playerIn.isSneaking())
+            if (!playerIn.func_226563_dT_())
                 LivingEntityModCapProvider.getLivingEntityModCap(playerIn).ifPresent(livingCap -> {
                     livingCap.setPlayId((int) worldIn.getDayTime());
                 });
@@ -42,7 +42,7 @@ public class MusicItem extends Item
                 LivingEntityModCapProvider.getLivingEntityModCap(playerIn).ifPresent(ILivingEntityModCap::synchronise);
             }
 
-        } else if (!playerIn.isSneaking())
+        } else if (!playerIn.func_226563_dT_())
         {
             int newPlayId = PlayIdSupplier.PlayType.BACKGROUND.getAsInt();
             lastPlayID = newPlayId;

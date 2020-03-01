@@ -86,7 +86,7 @@ public class PacketDispatcher
      */
     public static <MSG> void sendToAllAround(MSG message, PlayerEntity player, double range)
     {
-        sendToAllAround(message, player.getEntityWorld().getDimension(), player.posX, player.posY, player.posZ, range);
+        sendToAllAround(message, player.getEntityWorld().getDimension(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getY(), range);
     }
 
     /**
