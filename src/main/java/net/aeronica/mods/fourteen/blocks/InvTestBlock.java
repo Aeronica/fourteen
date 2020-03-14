@@ -15,7 +15,10 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
+import net.minecraft.util.Hand;
+import net.minecraft.util.Mirror;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
@@ -40,7 +43,7 @@ public class InvTestBlock extends Block
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult result) {
+    public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult result) {
         if (!world.isRemote) {
             TileEntity tileEntity = world.getTileEntity(pos);
             if (tileEntity instanceof INamedContainerProvider) {
@@ -48,7 +51,7 @@ public class InvTestBlock extends Block
             } else {
                 throw new IllegalStateException("Our named container provider is missing!");
             }
-            return ActionResultType.SUCCESS;
+            return true;
         }
         return super.onBlockActivated(state, world, pos, player, hand, result);
     }

@@ -8,7 +8,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -30,7 +29,7 @@ public class MusicBlock extends Block
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit)
+    public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit)
     {
         if (!worldIn.isRemote)
         {
@@ -39,8 +38,6 @@ public class MusicBlock extends Block
         {
             ClientAudio.play(PlayIdSupplier.PlayType.PLAYERS.getAsInt(), pos, TestData.getMML(rand.nextInt(TestData.values().length)).getMML());
         }
-        return ActionResultType.SUCCESS;
+        return true;
     }
-
-
 }

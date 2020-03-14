@@ -43,7 +43,7 @@ public final class LivingEntityModCapProvider
             @Override
             public INBT writeNBT(final Capability<ILivingEntityModCap> capability, final ILivingEntityModCap instance, final Direction side)
             {
-                return IntNBT.valueOf(instance.getPlayId());
+                return new IntNBT(instance.getPlayId());
             }
 
             @Override
