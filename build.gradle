@@ -82,6 +82,7 @@ minecraft {
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
+            ideaModule "${project.name}_main"
 
             args '--mod', 'fourteen', '--all', '--output', file('src/generated/resources/')
 
@@ -102,7 +103,7 @@ dependencies {
     // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
     // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
-    minecraft 'net.minecraftforge:forge:1.15.2-31.1.19'
+    minecraft 'net.minecraftforge:forge:1.15.2-31.1.20'
 
     compile 'org.antlr:antlr4-runtime:4.7.2' // use ANTLR version 4
 //    shade 'org.antlr:antlr4-runtime:4.7.2' // use ANTLR version 4
