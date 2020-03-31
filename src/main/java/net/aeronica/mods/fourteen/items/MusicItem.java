@@ -44,9 +44,8 @@ public class MusicItem extends Item
 
         } else if (!playerIn.isSneaking())
         {
-            int newPlayId = PlayIdSupplier.PlayType.BACKGROUND.getAsInt();
-            lastPlayID = newPlayId;
-            ClientAudio.playLocal(newPlayId, getRandomMML(), null);
+            lastPlayID = PlayIdSupplier.PlayType.BACKGROUND.getAsInt();
+            ClientAudio.playLocal(lastPlayID, getRandomMML(), null);
         } else
         {
             ClientAudio.stop(lastPlayID);
