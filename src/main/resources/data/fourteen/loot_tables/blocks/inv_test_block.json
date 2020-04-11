@@ -2,14 +2,19 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "name": "pool1",
-      "rolls": 1,
+      "____comment_01____": "rolls set to zero for no drop! We handle drop in onBlockHarvested method",
+      "rolls": 0,
+      "entries": [
+        {
+          "type": "minecraft:item",
           "name": "fourteen:inv_test_block"
-    }
-  ],
-  "conditions": [
-    {
-      "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ]
     }
   ]
 }
