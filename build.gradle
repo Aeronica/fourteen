@@ -26,6 +26,7 @@ configurations {
     compileOnly.extendsFrom minecraft
 }
 
+
 minecraft {
     // The mappings can be changed at any time, and must be in the following format.
     // snapshot_YYYYMMDD   Snapshot are built nightly.
@@ -43,11 +44,14 @@ minecraft {
         client {
             workingDirectory project.file('run')
 
-            // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
             ideaModule "${project.name}_main"
+
+            // program arguments
+            args '--username', project.findProperty('net.aeronica.mc.logon')
+            args '--password', project.findProperty('net.aeronica.mc.password')
 
 //            environment 'MOD_CLASSES', "${project.file("out/production/resources").canonicalPath};${project.file("out/production/classes").canonicalPath}"
             mods {
