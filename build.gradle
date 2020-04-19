@@ -3,29 +3,23 @@ buildscript {
         maven { url = 'https://files.minecraftforge.net/maven' }
         jcenter()
         mavenCentral()
+        maven { url = "https://plugins.gradle.org/m2/" }
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3+', changing: true
+        classpath "com.github.jengelman.gradle.plugins:shadow:4.0.4"
     }
 }
 apply plugin: 'net.minecraftforge.gradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
-// apply plugin: 'idea'
 apply plugin: 'maven-publish'
+apply plugin: "com.github.johnrengelman.shadow"
 
 version = '1.0.0'
 group = 'net.aeronica.mods.fourteen' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'Fifteen-1.15.2'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
-
-// Using shade at the moment, but it does not allow remapping the shaded classes to another path like FG 2.
-// Can't use the shadow plugin because it can't deal with the transitive runtime junk from forge.
-// So that means there is a potential for class conflicts unless I write my own MML lexer/parser.
-configurations {
-    compileOnly.extendsFrom minecraft
-}
-
 
 minecraft {
     // The mappings can be changed at any time, and must be in the following format.
@@ -99,17 +93,13 @@ minecraft {
     }
 }
 
-repositories {
-    mavenCentral()
-}
-
 dependencies {
     // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
     // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
     minecraft 'net.minecraftforge:forge:1.15.2-31.1.24'
 
-    compile 'org.antlr:antlr4-runtime:4.7.2' // use ANTLR version 4
+    shadow 'org.antlr:antlr4-runtime:4.7.2' // use ANTLR version 4
 //    shade 'org.antlr:antlr4-runtime:4.7.2' // use ANTLR version 4
     // You may put jars on which you depend on in ./libs or you may define them like so..
     // compile "some.group:artifact:version:classifier"
@@ -134,6 +124,18 @@ dependencies {
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
     options.compilerArgs.addAll(['-Xlint:unchecked', '-Xlint:deprecation'])
+}
+
+shadowJar {
+    project.configurations.shadow.setTransitive(true);
+    configurations = [project.configurations.shadow]
+
+    classifier '' // Replace the default JAR
+    relocate 'org.antlr.v4.runtime', 'net.aeronica.mods.fourteen.shadowlibs.org.antlr.v4.runtime'
+}
+
+reobf {
+    shadowJar {} // Reobfuscate the shadowed JAR
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..
