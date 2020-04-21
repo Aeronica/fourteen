@@ -15,6 +15,23 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'maven-publish'
 apply plugin: "com.github.johnrengelman.shadow"
 
+repositories {
+    jcenter()
+    maven {
+        url 'https://oss.sonatype.org/content/repositories/snapshots'
+    }
+    maven {
+        // location of the maven that hosts JEI files
+        name = "Progwml6 maven"
+        url = "http://dvs1.progwml6.com/files/maven"
+    }
+    maven {
+        // location of a maven mirror for JEI files, as a fallback
+        name = "ModMaven"
+        url = "modmaven.k-4u.nl"
+    }
+}
+
 version = '1.0.0'
 group = 'net.aeronica.mods.fourteen' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'Fifteen-1.15.2'
@@ -100,6 +117,12 @@ dependencies {
     minecraft 'net.minecraftforge:forge:1.15.2-31.1.24'
 
     shadow 'org.antlr:antlr4-runtime:4.7.2' // use ANTLR version 4
+
+    // compile against the JEI API but do not include it at runtime
+    compileOnly fg.deobf("mezz.jei:jei-1.15.2:6.0.0.3:api")
+    // at runtime, use the full JEI jar
+    runtimeOnly fg.deobf("mezz.jei:jei-1.15.2:6.0.0.3")
+
 //    shade 'org.antlr:antlr4-runtime:4.7.2' // use ANTLR version 4
     // You may put jars on which you depend on in ./libs or you may define them like so..
     // compile "some.group:artifact:version:classifier"
