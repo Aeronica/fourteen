@@ -171,7 +171,7 @@ public class ClientAudio
             AudioData result = playIDAudioData.putIfAbsent(playID, audioData);
             if (result != null)
             {
-                LOGGER.warn("ClientAudio#play: playID: %s has already been submitted", playID);
+                LOGGER.warn("ClientAudio#play: playID: {} has already been submitted", playID);
                 return;
             }
             if (isClient)
