@@ -30,7 +30,7 @@ public class GuiTestItem extends Item
     {
         if (!worldIn.isRemote)
         {
-            if (!playerIn.func_226563_dT_())
+            if (!playerIn.isSneaking())
             {
                 PacketDispatcher.sendTo(new OpenScreenMessage(OpenScreenMessage.SM.TEST_ONE), (ServerPlayerEntity) playerIn);
             }
@@ -39,7 +39,7 @@ public class GuiTestItem extends Item
                 // nop
             }
 
-        } else if (!playerIn.func_226563_dT_())
+        } else if (!playerIn.isSneaking())
         {
             // nop
         } else
