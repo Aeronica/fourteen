@@ -40,8 +40,13 @@ public class PCMAudioStream implements IAudioStream
         zeroBuffer.flip();
     }
 
-    @Override
     public AudioFormat func_216454_a()
+    {
+        return audioData.getAudioFormat();
+    }
+
+    @Override
+    public AudioFormat getAudioFormat()
     {
         return audioData.getAudioFormat();
     }

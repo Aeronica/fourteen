@@ -274,7 +274,7 @@ public class ClientAudio
                         submitStream(audioData).thenAccept(iAudioStream -> entry.runOnSoundExecutor(soundSource ->
                             {
                                 soundSource.func_216433_a(iAudioStream);
-                                soundSource.func_216438_c();
+                                soundSource.play();
                             }));
                         int playId = audioData.getPlayId();
                         LOGGER.debug("initializeCodec: PlayID {}, ISound {}", playId, sound.getSoundLocation());
