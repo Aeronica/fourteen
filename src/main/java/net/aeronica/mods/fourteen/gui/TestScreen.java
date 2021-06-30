@@ -1,8 +1,10 @@
 package net.aeronica.mods.fourteen.gui;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.TextComponentUtils;
 import net.minecraft.util.text.TranslationTextComponent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,11 +25,11 @@ public class TestScreen extends Screen
     public void init()
     {
         super.init();
-        this.addButton(new Button(this.width / 2 - 100, (this.height / 6 + 168) - 20, 200, 20, I18n.format("gui.fourteen.open"), (done) -> {
+        this.addButton(new Button(this.width / 2 - 100, (this.height / 6 + 168) - 20, 200, 20, new TranslationTextComponent("gui.fourteen.open"), (done) -> {
             this.minecraft.displayGuiScreen(new TestScreen(this));
             ++depth;
         }));
-        this.addButton(new Button(this.width / 2 - 100, this.height / 6 + 168, 200, 20, I18n.format("gui.done"), (done) -> {
+        this.addButton(new Button(this.width / 2 - 100, this.height / 6 + 168, 200, 20, new TranslationTextComponent("gui.done"), (done) -> {
             this.minecraft.displayGuiScreen(this.lastScreen);
             if (depth >= 1)
                 depth--;
@@ -36,12 +38,12 @@ public class TestScreen extends Screen
     }
 
     @Override
-    public void render(int p_render_1_, int p_render_2_, float p_render_3_)
+    public void render(MatrixStack matrixStack, int p_render_1_, int p_render_2_, float p_render_3_)
     {
-        this.renderBackground();
-        this.drawCenteredString(this.font, this.title.getFormattedText(), this.width / 2, 15, 16777215);
-        this.drawCenteredString(this.font, String.format("Depth %d", depth + 1), this.width / 2, 25, 16777215);
-        super.render(p_render_1_, p_render_2_, p_render_3_);
+        this.renderBackground(matrixStack);
+        drawCenteredString(matrixStack, this.font, this.title.getString(), this.width / 2, 15, 16777215);
+        drawCenteredString(matrixStack, this.font, String.format("Depth %d", depth + 1), this.width / 2, 25, 16777215);
+        super.render(matrixStack, p_render_1_, p_render_2_, p_render_3_);
     }
 
     @Override
@@ -68,10 +70,10 @@ public class TestScreen extends Screen
 
     // Called on ESC key and minecraft.displayGuiScreen(this.lastScreen);
     @Override
-    public void removed()
+    public void closeScreen()
     {
         LOGGER.debug("TestScreen removed {}", depth);
-        super.removed();
+        super.closeScreen();
     }
 
     @Override

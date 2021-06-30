@@ -19,6 +19,7 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
@@ -29,7 +30,9 @@ import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 @SuppressWarnings("deprecation")
 public class InvTestBlock extends Block
@@ -153,15 +156,13 @@ public class InvTestBlock extends Block
                         ++j;
                         if (i <= 4) {
                             ++i;
-                            ITextComponent itextcomponent = itemstack.getDisplayName().deepCopy();
-                            itextcomponent.appendText(" x").appendText(String.valueOf(itemstack.getCount()));
-                            tooltip.add(itextcomponent);
+                            tooltip.add(new StringTextComponent(itemstack.getDisplayName().getString() + " x" + NumberFormat.getNumberInstance(Locale.ROOT).format(itemstack.getCount())));
                         }
                     }
                 }
 
                 if (j - i > 0) {
-                    tooltip.add((new TranslationTextComponent("container.inv_test_block.more", j - i)).applyTextStyle(TextFormatting.ITALIC));
+                    tooltip.add(new StringTextComponent( new TranslationTextComponent("container.inv_test_block.more", j - i).getString() + (TextFormatting.ITALIC)));
                 }
             }
         }

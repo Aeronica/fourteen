@@ -1,6 +1,7 @@
 package net.aeronica.mods.fourteen.blocks;
 
 import net.aeronica.mods.fourteen.Fourteen;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -77,18 +78,19 @@ public class InvTestTile extends TileEntity implements INamedContainerProvider, 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt)
     {
-        read(pkt.getNbtCompound());
+        read(getBlockState(), pkt.getNbtCompound());
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public void read(CompoundNBT tag) {
-        CompoundNBT invTag = tag.getCompound("inv");
+    public void read(BlockState state, CompoundNBT nbt)
+    {
+        CompoundNBT invTag = nbt.getCompound("inv");
         handler.ifPresent(h -> ((INBTSerializable<CompoundNBT>) h).deserializeNBT(invTag));
-        if (tag.contains("CustomName", Constants.NBT.TAG_STRING)) {
-            this.customName = ITextComponent.Serializer.fromJson(tag.getString("CustomName"));
+        if (nbt.contains("CustomName", Constants.NBT.TAG_STRING)) {
+            this.customName = ITextComponent.Serializer.getComponentFromJson(nbt.getString("CustomName"));
         }
-        super.read(tag);
+        super.read(state, nbt);
     }
 
     @SuppressWarnings("unchecked")

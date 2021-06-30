@@ -25,8 +25,7 @@ public class MusicBlock extends Block
     {
         super(Block.Properties.create(Material.IRON)
              .sound(SoundType.METAL)
-             .hardnessAndResistance(2.0F)
-             .lightValue(14));
+             .hardnessAndResistance(2.0F));
     }
 
     @Override
@@ -41,6 +40,4 @@ public class MusicBlock extends Block
         }
         return ActionResultType.SUCCESS;
     }
-
-
 }
