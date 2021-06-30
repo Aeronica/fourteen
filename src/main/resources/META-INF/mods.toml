@@ -6,7 +6,7 @@
 # The name of the mod loader type to load - for regular FML @Mod mods it should be javafml
 modLoader="javafml" #mandatory
 # A version range to match for said mod loader - for regular FML @Mod it will be the forge version
-loaderVersion="[31,)" #mandatory (26 is current forge version)
+loaderVersion="[36,)" #mandatory (26 is current forge version)
 # A URL to refer people to when problems occur with this mod
 issueTrackerURL="https://github.com/Aeronica/fourteen/issues" #optional
 # A list of mods - how many allowed here is determined by the individual mod loader
@@ -14,11 +14,11 @@ issueTrackerURL="https://github.com/Aeronica/fourteen/issues" #optional
 # The modid of the mod
 modId="fourteen" #mandatory
 # The version number of the mod - there's a few well known ${} variables useable here or just hardcode it
-version="${version}" #mandatory
+version="${file.jarVersion}" #mandatory
  # A display name for the mod
-displayName="Fifteen Mod" #mandatory
+displayName="Sixteen Mod" #mandatory
 # A URL to query for updates for this mod. See the JSON update specification <here>
-updateJSONURL="https://gist.githubusercontent.com/Aeronica/243e4bef821fe8e538bceb222d093297/raw/349813031279ae250dc9bfe93c54e29fc1c7ab81/fourteen_update.json" #optional
+# updateJSONURL="https://gist.githubusercontent.com/Aeronica/243e4bef821fe8e538bceb222d093297/raw/349813031279ae250dc9bfe93c54e29fc1c7ab81/fourteen_update.json" #optional
 # A URL for the "homepage" for this mod, displayed in the mod UI
 displayURL="https://github.com/Aeronica/fourteen" #optional
 # A file name (in the root of the mod JAR) containing a logo for display
@@ -29,7 +29,7 @@ credits="Thanks for this example mod goes to the cosmos" #optional
 authors="Cosmos, Sun, Moon and Earth" #optional
 # The description text for the mod (multi line!) (#mandatory)
 description='''
-Just a silly MC/Forge 1.15.2 Test Mod
+Just a silly MC/Forge 1.16.5 Test Mod
 '''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies.fourteen]] #optional
@@ -38,7 +38,7 @@ Just a silly MC/Forge 1.15.2 Test Mod
     # Does this dependency have to exist - if not, ordering below must be specified
     mandatory=true #mandatory
     # The version range of the dependency
-    versionRange="[31,)" #mandatory
+    versionRange="[36,)" #mandatory
     # An ordering relationship for the dependency - BEFORE or AFTER required if the relationship is not mandatory
     ordering="NONE"
     # Side this dependency is applied on - BOTH, CLIENT or SERVER
@@ -47,6 +47,6 @@ Just a silly MC/Forge 1.15.2 Test Mod
 [[dependencies.fourteen]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.15.2]"
+    versionRange="[1.16.5,1.17]"
     ordering="NONE"
     side="BOTH"
