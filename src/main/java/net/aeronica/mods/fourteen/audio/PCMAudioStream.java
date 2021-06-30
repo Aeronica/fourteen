@@ -54,32 +54,32 @@ public class PCMAudioStream implements IAudioStream
     /*
      * read - for static pre-loaded audio - not used
      */
-    @Override
-    public ByteBuffer func_216453_b() throws IOException
-    {
-        LOGGER.debug("ByteBuffer func_216453_b()");
-        ByteBuffer byteBuffer = BufferUtils.createByteBuffer(SAMPLE_SIZE);
-        byteBuffer.put(zeroBuffer);
-        nextZeroBuffer();
-        zeroBuffer.flip();
-        byteBuffer.flip();
-        return byteBuffer;
-    }
+//    @Override
+//    public ByteBuffer func_216453_b() throws IOException
+//    {
+//        LOGGER.debug("ByteBuffer func_216453_b()");
+//        ByteBuffer byteBuffer = BufferUtils.createByteBuffer(SAMPLE_SIZE);
+//        byteBuffer.put(zeroBuffer);
+//        nextZeroBuffer();
+//        zeroBuffer.flip();
+//        byteBuffer.flip();
+//        return byteBuffer;
+//    }
 
     /*
      * streamRead(int bufferSize) - for streaming audio
      */
     @Nullable
     @Override
-    public ByteBuffer func_216455_a(int p_216455_1_) throws IOException
+    public ByteBuffer readOggSoundWithCapacity(int size) throws IOException
     {
         if (hasInputStreamError())
             return null;
         notifyOnInputStreamAvailable();
 
         int bufferSize;
-        byte[] readBuffer = new byte[p_216455_1_];
-        ByteBuffer byteBuffer = BufferUtils.createByteBuffer(p_216455_1_);
+        byte[] readBuffer = new byte[size];
+        ByteBuffer byteBuffer = BufferUtils.createByteBuffer(size);
         try
         {
             if (hasStream && (audioInputStream != null))

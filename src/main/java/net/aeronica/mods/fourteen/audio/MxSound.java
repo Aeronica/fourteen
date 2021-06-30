@@ -22,7 +22,6 @@ public abstract class MxSound extends TickableSound
         this.pitch = 1F;
         this.repeat = false;
         this.repeatDelay = 0;
-        this.donePlaying = false;
         this.x = 0F;
         this.y = 0F;
         this.z = 0F;
@@ -46,6 +45,6 @@ public abstract class MxSound extends TickableSound
 
     protected void setDonePlaying()
     {
-        this.donePlaying = true;
+        this.finishPlaying();
     }
 }

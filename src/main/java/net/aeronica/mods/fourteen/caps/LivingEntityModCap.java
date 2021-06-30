@@ -4,8 +4,8 @@ import net.aeronica.mods.fourteen.managers.PlayIdSupplier;
 import net.aeronica.mods.fourteen.network.LivingEntityModCapSync;
 import net.aeronica.mods.fourteen.network.PacketDispatcher;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.util.RegistryKey;
 import net.minecraft.world.World;
-import net.minecraft.world.dimension.Dimension;
 
 import javax.annotation.Nullable;
 
@@ -39,7 +39,7 @@ public class LivingEntityModCap implements ILivingEntityModCap
         if (entity == null) return;
         World world = entity.world;
         if (world.isRemote) return;
-        Dimension dimension = world.dimension;
+        RegistryKey<World> dimension = world.getDimensionKey();
         PacketDispatcher.sendToDimension(new LivingEntityModCapSync(playId), dimension);
     }
 }

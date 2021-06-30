@@ -4,8 +4,9 @@ import net.aeronica.mods.fourteen.Reference;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.dimension.Dimension;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.PacketDistributor;
@@ -74,28 +75,28 @@ public class PacketDispatcher
      * the same dimension. Shortcut to
      * {@link PacketDispatcher#sendToAllAround(MSG, PacketDistributor.TargetPoint)}
      */
-    public static <MSG> void sendToAllAround(MSG message, Dimension dimension, double x, double y, double z, double range)
+    public static <MSG> void sendToAllAround(MSG message, RegistryKey<World> dimension, double x, double y, double z, double range)
     {
-        sendToAllAround(message, new PacketDistributor.TargetPoint(x, y, z, range, dimension.getType()));
+        sendToAllAround(message, new PacketDistributor.TargetPoint(x, y, z, range, dimension));
     }
 
     /**
      * Sends a message to everyone within a certain range of the player
      * provided. Shortcut to
-     * {@link PacketDispatcher#sendToAllAround(MSG, Dimension, double, double, double, double)}
+     * {@link PacketDispatcher#sendToAllAround(MSG,  PlayerEntity, double)}
      */
     public static <MSG> void sendToAllAround(MSG message, PlayerEntity player, double range)
     {
-        sendToAllAround(message, player.getEntityWorld().getDimension(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getY(), range);
+        sendToAllAround(message, player.getEntityWorld().getDimensionKey(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getY(), range);
     }
 
     /**
      * Send this message to everyone within the supplied dimension. See
      * {@link SimpleChannel#send(PacketDistributor.PacketTarget, Object)}
      */
-    public static <MSG> void sendToDimension(MSG message, Dimension dimension)
+    public static <MSG> void sendToDimension(MSG message, RegistryKey<World> dimension)
     {
-        HANDLER.send(PacketDistributor.DIMENSION.with(dimension::getType), message);
+        HANDLER.send(PacketDistributor.DIMENSION.with((Supplier<RegistryKey<World>>) dimension), message);
     }
 
     /**

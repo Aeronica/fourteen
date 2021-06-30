@@ -273,7 +273,7 @@ public class ClientAudio
                     {
                         submitStream(audioData).thenAccept(iAudioStream -> entry.runOnSoundExecutor(soundSource ->
                             {
-                                soundSource.func_216433_a(iAudioStream);
+                                soundSource.playStreamableSounds(iAudioStream);
                                 soundSource.play();
                             }));
                         int playId = audioData.getPlayId();
