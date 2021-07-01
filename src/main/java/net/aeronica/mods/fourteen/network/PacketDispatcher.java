@@ -96,7 +96,7 @@ public class PacketDispatcher
      */
     public static <MSG> void sendToDimension(MSG message, RegistryKey<World> dimension)
     {
-        HANDLER.send(PacketDistributor.DIMENSION.with((Supplier<RegistryKey<World>>) dimension), message);
+        HANDLER.send(PacketDistributor.DIMENSION.with( ()->dimension), message);
     }
 
     /**
