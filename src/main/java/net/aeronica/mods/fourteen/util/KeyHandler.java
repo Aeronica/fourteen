@@ -40,24 +40,24 @@ public class KeyHandler
     {
         ClientRegistry.registerKeyBinding(keyOpenPartyGUI);
         ClientRegistry.registerKeyBinding(keyOpenMusicOptionsGUI);
-        mc.gameSettings.loadOptions();
+        mc.options.load();
     }
 
     @SubscribeEvent
     public void tick(InputEvent.KeyInputEvent event)
     {
         // If the player or world is null we must not try to send packets to the server!
-        if (mc.player == null || mc.player.world == null) return;
+        if (mc.player == null || mc.player.level == null) return;
 
         int key = event.getKey();
         boolean isDown = event.getAction() == (GLFW.GLFW_PRESS & GLFW.GLFW_REPEAT);
-        if (keyOpenPartyGUI.isPressed())
+        if (keyOpenPartyGUI.consumeClick())
         {
-            PacketDispatcher.sendToServer(new SendKeyMessage(keyOpenPartyGUI.getKeyDescription()));
+            PacketDispatcher.sendToServer(new SendKeyMessage(keyOpenPartyGUI.getName()));
         }
-        if (keyOpenMusicOptionsGUI.isPressed())
+        if (keyOpenMusicOptionsGUI.consumeClick())
         {
-            PacketDispatcher.sendToServer(new SendKeyMessage(keyOpenMusicOptionsGUI.getKeyDescription()));
+            PacketDispatcher.sendToServer(new SendKeyMessage(keyOpenMusicOptionsGUI.getName()));
         }
 
         if (isDown && (key == GLFW.GLFW_KEY_LEFT_CONTROL) && ctrlKeyDown)

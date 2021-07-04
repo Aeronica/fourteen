@@ -20,26 +20,26 @@ public class InvTestScreen extends ContainerScreen<InvTestContainer>
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int x, int y)
+    protected void renderBg(MatrixStack matrixStack, float partialTicks, int x, int y)
     {
         //RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.clearColor(1.0F, 1.0F, 1.0F, 1.0F);
-        Objects.requireNonNull(this.minecraft).getTextureManager().bindTexture(GUI);
-        int relX = (this.width - this.xSize) / 2;
-        int relY = (this.height - this.ySize) / 2;
-        this.blit(matrixStack, relX, relY, 0, 0, this.xSize, this.ySize);
+        Objects.requireNonNull(this.minecraft).getTextureManager().bind(GUI);
+        int relX = (this.width - this.imageWidth) / 2;
+        int relY = (this.height - this.imageHeight) / 2;
+        this.blit(matrixStack, relX, relY, 0, 0, this.imageWidth, this.imageHeight);
     }
 
     @Override
     public void render(MatrixStack matrixStack ,int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(matrixStack);
         super.render(matrixStack, mouseX, mouseY, partialTicks);
-        this.renderHoveredTooltip(matrixStack, mouseX, mouseY);
+        this.renderTooltip(matrixStack, mouseX, mouseY);
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(MatrixStack matrixStack ,int mouseX, int mouseY) {
-        this.font.drawString(matrixStack, container.getName().getUnformattedComponentText(), 10, 8, 4210752);
-        this.font.drawString(matrixStack, this.playerInventory.getDisplayName().getUnformattedComponentText(), 10, 58, 4210752);
+    protected void renderLabels(MatrixStack matrixStack ,int mouseX, int mouseY) {
+        this.font.draw(matrixStack, menu.getName().getContents(), 10, 8, 4210752);
+        this.font.draw(matrixStack, this.inventory.getDisplayName().getContents(), 10, 58, 4210752);
     }
 }

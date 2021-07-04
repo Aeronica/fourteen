@@ -23,15 +23,15 @@ public class MusicBlock extends Block
 
     public MusicBlock()
     {
-        super(Block.Properties.create(Material.IRON)
+        super(Block.Properties.of(Material.METAL)
              .sound(SoundType.METAL)
-             .hardnessAndResistance(2.0F));
+             .strength(2.0F));
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit)
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit)
     {
-        if (!worldIn.isRemote)
+        if (!worldIn.isClientSide)
         {
             // worldIn.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_COW_BELL, SoundCategory.BLOCKS, 1F, 2F);
         } else

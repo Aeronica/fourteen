@@ -40,7 +40,7 @@ public class InvTestTile extends TileEntity implements INamedContainerProvider, 
 
             @Override
             protected void onContentsChanged(int slot) {
-                markDirty();
+                setChanged();
             }
 
 //            @Override
@@ -63,7 +63,7 @@ public class InvTestTile extends TileEntity implements INamedContainerProvider, 
     public CompoundNBT getUpdateTag()
     {
         CompoundNBT tag = super.getUpdateTag();
-        return this.write(tag);
+        return this.save(tag);
     }
 
     @Nullable
@@ -71,31 +71,31 @@ public class InvTestTile extends TileEntity implements INamedContainerProvider, 
     public SUpdateTileEntityPacket getUpdatePacket()
     {
         CompoundNBT cmp = new CompoundNBT();
-        write(cmp);
-        return new SUpdateTileEntityPacket(pos, 1, cmp);
+        save(cmp);
+        return new SUpdateTileEntityPacket(worldPosition, 1, cmp);
     }
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt)
     {
-        read(getBlockState(), pkt.getNbtCompound());
+        load(getBlockState(), pkt.getTag());
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public void read(BlockState state, CompoundNBT nbt)
+    public void load(BlockState state, CompoundNBT nbt)
     {
         CompoundNBT invTag = nbt.getCompound("inv");
         handler.ifPresent(h -> ((INBTSerializable<CompoundNBT>) h).deserializeNBT(invTag));
         if (nbt.contains("CustomName", Constants.NBT.TAG_STRING)) {
-            this.customName = ITextComponent.Serializer.getComponentFromJson(nbt.getString("CustomName"));
+            this.customName = ITextComponent.Serializer.fromJson(nbt.getString("CustomName"));
         }
-        super.read(state, nbt);
+        super.load(state, nbt);
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public CompoundNBT write(CompoundNBT tag) {
+    public CompoundNBT save(CompoundNBT tag) {
         handler.ifPresent(h -> {
             CompoundNBT compound = ((INBTSerializable<CompoundNBT>) h).serializeNBT();
             tag.put("inv", compound);
@@ -103,7 +103,7 @@ public class InvTestTile extends TileEntity implements INamedContainerProvider, 
         if (this.customName != null) {
             tag.putString("CustomName", ITextComponent.Serializer.toJson(this.customName));
         }
-        return super.write(tag);
+        return super.save(tag);
     }
 
     @Nonnull
@@ -123,8 +123,8 @@ public class InvTestTile extends TileEntity implements INamedContainerProvider, 
     @Nullable
     @Override
     public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-        if (world == null) return null;
-        return new InvTestContainer(i, world, pos, playerInventory, playerEntity);
+        if (level == null) return null;
+        return new InvTestContainer(i, level, worldPosition, playerInventory, playerEntity);
     }
 
     // INameable
@@ -148,6 +148,6 @@ public class InvTestTile extends TileEntity implements INamedContainerProvider, 
 
     public void setCustomName(ITextComponent name) {
         this.customName = name;
-        markDirty();
+        setChanged();
     }
 }

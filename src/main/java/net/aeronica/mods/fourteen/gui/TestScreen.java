@@ -26,11 +26,11 @@ public class TestScreen extends Screen
     {
         super.init();
         this.addButton(new Button(this.width / 2 - 100, (this.height / 6 + 168) - 20, 200, 20, new TranslationTextComponent("gui.fourteen.open"), (done) -> {
-            this.minecraft.displayGuiScreen(new TestScreen(this));
+            this.minecraft.setScreen(new TestScreen(this));
             ++depth;
         }));
         this.addButton(new Button(this.width / 2 - 100, this.height / 6 + 168, 200, 20, new TranslationTextComponent("gui.done"), (done) -> {
-            this.minecraft.displayGuiScreen(this.lastScreen);
+            this.minecraft.setScreen(this.lastScreen);
             if (depth >= 1)
                 depth--;
         }));
@@ -61,19 +61,19 @@ public class TestScreen extends Screen
     // Call on ESC key force close! Ignores chained GUI's?
     // Override "shouldCloseOnEsc and return false" to prevent closing on ESC.
     @Override
-    public void onClose()
+    public void removed()
     {
         depth = 0;
         LOGGER.debug("TestScreen onClose");
-        super.onClose();
+        super.removed();
     }
 
     // Called on ESC key and minecraft.displayGuiScreen(this.lastScreen);
     @Override
-    public void closeScreen()
+    public void onClose()
     {
         LOGGER.debug("TestScreen removed {}", depth);
-        super.closeScreen();
+        super.onClose();
     }
 
     @Override

@@ -30,7 +30,7 @@ public class InvTestContainer extends Container
         super(Fourteen.ObjectHolders.INV_TEST_CONTAINER, windowId);
         this.playerEntity = playerEntity;
         this.playerInventory = new InvWrapper(playerInventory);
-        tileEntity = world.getTileEntity(pos);
+        tileEntity = world.getBlockEntity(pos);
 
         tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h -> {
             addSlot(new SlotItemHandler(h, 0, 64, 24));
@@ -49,38 +49,38 @@ public class InvTestContainer extends Container
 
     public ITextComponent getName()
     {
-        if (tileEntity != null && tileEntity.getWorld().isRemote)
+        if (tileEntity != null && tileEntity.getLevel().isClientSide)
             return ((InvTestTile)tileEntity).getName();
         return new StringTextComponent("");
     }
 
     @Override
-    public boolean canInteractWith(PlayerEntity playerIn) {
-        return isWithinUsableDistance(IWorldPosCallable.of(tileEntity.getWorld(), tileEntity.getPos()), playerEntity, Fourteen.ObjectHolders.INV_TEST_BLOCK);
+    public boolean stillValid(PlayerEntity playerIn) {
+        return stillValid(IWorldPosCallable.create(tileEntity.getLevel(), tileEntity.getBlockPos()), playerEntity, Fourteen.ObjectHolders.INV_TEST_BLOCK);
     }
 
     // Transfer the item in test slot to-from any other open slot
     @Override
-    public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
+    public ItemStack quickMoveStack(PlayerEntity playerIn, int index) {
         ItemStack itemstack = ItemStack.EMPTY;
-        Slot slot = this.inventorySlots.get(index);
-        if (slot != null && slot.getHasStack()) {
-            ItemStack stack = slot.getStack();
+        Slot slot = this.slots.get(index);
+        if (slot != null && slot.hasItem()) {
+            ItemStack stack = slot.getItem();
             itemstack = stack.copy();
             if (index == 0)
             {
-                if (!this.mergeItemStack(stack, 1, 37, false))
+                if (!this.moveItemStackTo(stack, 1, 37, false))
                     return ItemStack.EMPTY;
-                slot.onSlotChange(stack, itemstack);
+                slot.onQuickCraft(stack, itemstack);
             }
-            else if (!this.mergeItemStack(stack, 0, 1, false))
+            else if (!this.moveItemStackTo(stack, 0, 1, false))
             {
                 return ItemStack.EMPTY;
             }
             if (stack.isEmpty()) {
-                slot.putStack(ItemStack.EMPTY);
+                slot.set(ItemStack.EMPTY);
             } else {
-                slot.onSlotChanged();
+                slot.setChanged();
             }
         }
         return itemstack;

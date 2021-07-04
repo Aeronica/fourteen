@@ -13,6 +13,6 @@ public class Handler
 
     public static void openTestScreen()
     {
-        mc.enqueue(()->mc.displayGuiScreen(new TestScreen(null)));
+        mc.tell(()->mc.setScreen(new TestScreen(null)));
     }
 }

@@ -26,11 +26,11 @@ public class GuiTestItem extends Item
 
     @Nonnull
     @Override
-    public ActionResult<ItemStack> onItemRightClick(@Nonnull World worldIn, @Nonnull PlayerEntity playerIn, @Nonnull Hand handIn)
+    public ActionResult<ItemStack> use(@Nonnull World worldIn, @Nonnull PlayerEntity playerIn, @Nonnull Hand handIn)
     {
-        if (!worldIn.isRemote)
+        if (!worldIn.isClientSide)
         {
-            if (!playerIn.isSneaking())
+            if (!playerIn.isShiftKeyDown())
             {
                 PacketDispatcher.sendTo(new OpenScreenMessage(OpenScreenMessage.SM.TEST_ONE), (ServerPlayerEntity) playerIn);
             }
@@ -39,19 +39,19 @@ public class GuiTestItem extends Item
                 // nop
             }
 
-        } else if (!playerIn.isSneaking())
+        } else if (!playerIn.isShiftKeyDown())
         {
             // nop
         } else
         {
             // nop
         }
-        return super.onItemRightClick(worldIn, playerIn, handIn);
+        return super.use(worldIn, playerIn, handIn);
     }
 
     @Override
-    public ActionResultType onItemUse(ItemUseContext context)
+    public ActionResultType useOn(ItemUseContext context)
     {
-        return super.onItemUse(context);
+        return super.useOn(context);
     }
 }

@@ -40,38 +40,18 @@ public class PCMAudioStream implements IAudioStream
         zeroBuffer.flip();
     }
 
-    public AudioFormat func_216454_a()
-    {
-        return audioData.getAudioFormat();
-    }
-
     @Override
-    public AudioFormat getAudioFormat()
+    public AudioFormat getFormat()
     {
         return audioData.getAudioFormat();
     }
-
-    /*
-     * read - for static pre-loaded audio - not used
-     */
-//    @Override
-//    public ByteBuffer func_216453_b() throws IOException
-//    {
-//        LOGGER.debug("ByteBuffer func_216453_b()");
-//        ByteBuffer byteBuffer = BufferUtils.createByteBuffer(SAMPLE_SIZE);
-//        byteBuffer.put(zeroBuffer);
-//        nextZeroBuffer();
-//        zeroBuffer.flip();
-//        byteBuffer.flip();
-//        return byteBuffer;
-//    }
 
     /*
      * streamRead(int bufferSize) - for streaming audio
      */
     @Nullable
     @Override
-    public ByteBuffer readOggSoundWithCapacity(int size) throws IOException
+    public ByteBuffer read(int size) throws IOException
     {
         if (hasInputStreamError())
             return null;

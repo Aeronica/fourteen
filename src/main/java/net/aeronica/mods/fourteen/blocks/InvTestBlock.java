@@ -34,6 +34,8 @@ import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 @SuppressWarnings("deprecation")
 public class InvTestBlock extends Block
 {
@@ -43,17 +45,17 @@ public class InvTestBlock extends Block
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult result) {
-        if (!world.isRemote) {
-            TileEntity tileEntity = world.getTileEntity(pos);
+    public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult result) {
+        if (!world.isClientSide) {
+            TileEntity tileEntity = world.getBlockEntity(pos);
             if (tileEntity instanceof INamedContainerProvider) {
-                NetworkHooks.openGui((ServerPlayerEntity) player, (INamedContainerProvider) tileEntity, tileEntity.getPos());
+                NetworkHooks.openGui((ServerPlayerEntity) player, (INamedContainerProvider) tileEntity, tileEntity.getBlockPos());
             } else {
                 throw new IllegalStateException("Our named container provider is missing!");
             }
             return ActionResultType.SUCCESS;
         }
-        return super.onBlockActivated(state, world, pos, player, hand, result);
+        return super.use(state, world, pos, player, hand, result);
     }
 
     @Override
@@ -68,80 +70,80 @@ public class InvTestBlock extends Block
     }
 
     @Override
-    public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
-        if (stack.hasDisplayName()) {
-            TileEntity tileentity = world.getTileEntity(pos);
+    public void setPlacedBy(World world, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
+        if (stack.hasCustomHoverName()) {
+            TileEntity tileentity = world.getBlockEntity(pos);
             if (tileentity instanceof InvTestTile) {
-                ((InvTestTile)tileentity).setCustomName(stack.getDisplayName());
+                ((InvTestTile)tileentity).setCustomName(stack.getHoverName());
             }
         }
     }
 
     @Override
-    public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player)
+    public void playerWillDestroy(World worldIn, BlockPos pos, BlockState state, PlayerEntity player)
     {
-        TileEntity tileentity = worldIn.getTileEntity(pos);
+        TileEntity tileentity = worldIn.getBlockEntity(pos);
         if (tileentity instanceof InvTestTile)
         {
             InvTestTile testTile = (InvTestTile) tileentity;
-            if (!worldIn.isRemote && !player.isCreative())
+            if (!worldIn.isClientSide && !player.isCreative())
             {
-                ItemStack itemstack = getItem(worldIn, pos, state);
-                CompoundNBT compound = testTile.write(new CompoundNBT());
+                ItemStack itemstack = getCloneItemStack(worldIn, pos, state);
+                CompoundNBT compound = testTile.save(new CompoundNBT());
                 if (!compound.isEmpty()) {
-                    itemstack.setTagInfo("BlockEntityTag", compound);
+                    itemstack.addTagElement("BlockEntityTag", compound);
                 }
 
                 if (testTile.hasCustomName()) {
-                    itemstack.setDisplayName(testTile.getCustomName());
+                    itemstack.setHoverName(testTile.getCustomName());
                 }
 
                 ItemEntity itementity = new ItemEntity(worldIn, (double)pos.getX(), (double)pos.getY(), (double)pos.getZ(), itemstack);
-                itementity.setDefaultPickupDelay();
-                worldIn.addEntity(itementity);
+                itementity.setDefaultPickUpDelay();
+                worldIn.addFreshEntity(itementity);
             }
         }
-        super.onBlockHarvested(worldIn, pos, state, player);
+        super.playerWillDestroy(worldIn, pos, state, player);
     }
 
     @Override
-    public ItemStack getItem(IBlockReader worldIn, BlockPos pos, BlockState state)
+    public ItemStack getCloneItemStack(IBlockReader worldIn, BlockPos pos, BlockState state)
     {
-        ItemStack itemstack = super.getItem(worldIn, pos, state);
-        InvTestTile testTile = (InvTestTile)worldIn.getTileEntity(pos);
-        CompoundNBT compoundnbt = testTile.write(new CompoundNBT());
+        ItemStack itemstack = super.getCloneItemStack(worldIn, pos, state);
+        InvTestTile testTile = (InvTestTile)worldIn.getBlockEntity(pos);
+        CompoundNBT compoundnbt = testTile.save(new CompoundNBT());
         if (!compoundnbt.isEmpty()) {
-            itemstack.setTagInfo("BlockEntityTag", compoundnbt);
+            itemstack.addTagElement("BlockEntityTag", compoundnbt);
         }
         return itemstack;
     }
 
     @Override
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
-        return state.rotate(mirrorIn.toRotation(state.get(BlockStateProperties.HORIZONTAL_FACING)));
+        return state.rotate(mirrorIn.getRotation(state.getValue(BlockStateProperties.HORIZONTAL_FACING)));
     }
 
     @Override
     public BlockState rotate(BlockState state, Rotation rot) {
-        return state.with(BlockStateProperties.HORIZONTAL_FACING, rot.rotate(state.get(BlockStateProperties.HORIZONTAL_FACING)));
+        return state.setValue(BlockStateProperties.HORIZONTAL_FACING, rot.rotate(state.getValue(BlockStateProperties.HORIZONTAL_FACING)));
     }
 
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context)
     {
-        return this.getDefaultState().with(BlockStateProperties.HORIZONTAL_FACING, context.getPlacementHorizontalFacing().getOpposite());
+        return this.defaultBlockState().setValue(BlockStateProperties.HORIZONTAL_FACING, context.getHorizontalDirection().getOpposite());
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(BlockStateProperties.HORIZONTAL_FACING);
     }
 
     @OnlyIn(Dist.CLIENT)
-    public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        super.addInformation(stack, worldIn, tooltip, flagIn);
-        CompoundNBT compoundnbt = stack.getChildTag("BlockEntityTag");
+    public void appendHoverText(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
+        CompoundNBT compoundnbt = stack.getTagElement("BlockEntityTag");
         if (compoundnbt != null) {
             CompoundNBT compoundInv = compoundnbt.getCompound("inv");
 
@@ -156,7 +158,7 @@ public class InvTestBlock extends Block
                         ++j;
                         if (i <= 4) {
                             ++i;
-                            tooltip.add(new StringTextComponent(itemstack.getDisplayName().getString() + " x" + NumberFormat.getNumberInstance(Locale.ROOT).format(itemstack.getCount())));
+                            tooltip.add(new StringTextComponent(itemstack.getHoverName().getString() + " x" + NumberFormat.getNumberInstance(Locale.ROOT).format(itemstack.getCount())));
                         }
                     }
                 }

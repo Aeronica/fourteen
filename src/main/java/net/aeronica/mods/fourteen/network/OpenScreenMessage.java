@@ -18,13 +18,13 @@ public class OpenScreenMessage
 
     public static OpenScreenMessage decode(final PacketBuffer buffer)
     {
-        final SM screen = buffer.readEnumValue(SM.class);
+        final SM screen = buffer.readEnum(SM.class);
         return new OpenScreenMessage(screen);
     }
 
     public static void encode(final OpenScreenMessage message, final PacketBuffer buffer)
     {
-        buffer.writeEnumValue(message.screen);
+        buffer.writeEnum(message.screen);
     }
 
     public static void handle(final OpenScreenMessage message, final Supplier<NetworkEvent.Context> ctx)

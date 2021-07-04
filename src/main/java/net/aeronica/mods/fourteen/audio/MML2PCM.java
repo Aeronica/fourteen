@@ -73,7 +73,7 @@ public class MML2PCM
         for (int packedPreset: mmlToMIDI.getPackedPresets())
         {
             Patch patchPreset = MMLUtil.packedPreset2Patch(packedPreset);
-            String name = I18n.format(MIDISystemUtil.getPatchNameKey(patchPreset));
+            String name = I18n.get(MIDISystemUtil.getPatchNameKey(patchPreset));
             LOGGER.debug("MML2PCM preset: bank: {}, program {}, name {}", patchPreset.getBank(),
                            patchPreset.getProgram(), name);
         }

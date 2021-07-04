@@ -4,6 +4,8 @@ import net.aeronica.mods.fourteen.Reference;
 import net.minecraft.client.audio.Sound;
 import net.minecraft.util.ResourceLocation;
 
+import net.minecraft.client.audio.Sound.Type;
+
 public class PCMSound extends Sound
 {
     public PCMSound()
@@ -13,8 +15,8 @@ public class PCMSound extends Sound
     }
 
     @Override
-    public ResourceLocation getSoundAsOggLocation()
+    public ResourceLocation getPath()
     {
-        return new ResourceLocation(Reference.MOD_ID, "sounds/" + getSoundLocation().getPath() + ".nul");
+        return new ResourceLocation(Reference.MOD_ID, "sounds/" + getLocation().getPath() + ".nul");
     }
 }

@@ -36,13 +36,13 @@ public class SendKeyMessage
 
     public static SendKeyMessage decode(final PacketBuffer buffer)
     {
-        String keyBindingDesc = buffer.readString(64);
+        String keyBindingDesc = buffer.readUtf(64);
         return new SendKeyMessage(keyBindingDesc);
     }
 
     public static void encode(final SendKeyMessage message, final PacketBuffer buffer)
     {
-        buffer.writeString(message.keyBindingDesc, 64);
+        buffer.writeUtf(message.keyBindingDesc, 64);
     }
 
     public static void handle(final SendKeyMessage message, final Supplier<NetworkEvent.Context> ctx)

@@ -5,6 +5,8 @@ import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.audio.TickableSound;
 import net.minecraft.util.SoundCategory;
 
+import net.minecraft.client.audio.ISound.AttenuationType;
+
 public abstract class MxSound extends TickableSound
 {
     protected int playID;
@@ -20,17 +22,17 @@ public abstract class MxSound extends TickableSound
         this.sound = new PCMSound();
         this.volume = 1F;
         this.pitch = 1F;
-        this.repeat = false;
-        this.repeatDelay = 0;
+        this.looping = false;
+        this.delay = 0;
         this.x = 0F;
         this.y = 0F;
         this.z = 0F;
-        this.attenuationType = AttenuationType.LINEAR;
-        this.soundEventAccessor = new SoundEventAccessor(this.sound.getSoundLocation(), "subtitle.fourteen.pcm-proxy");
+        this.attenuation = AttenuationType.LINEAR;
+        this.soundEventAccessor = new SoundEventAccessor(this.sound.getLocation(), "subtitle.fourteen.pcm-proxy");
     }
 
     @Override
-    public SoundEventAccessor createAccessor(SoundHandler handler)
+    public SoundEventAccessor resolve(SoundHandler handler)
     {
         return this.soundEventAccessor;
     }
@@ -45,6 +47,6 @@ public abstract class MxSound extends TickableSound
 
     protected void setDonePlaying()
     {
-        this.finishPlaying();
+        this.stop();
     }
 }

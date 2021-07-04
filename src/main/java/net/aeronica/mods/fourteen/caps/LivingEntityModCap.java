@@ -37,9 +37,9 @@ public class LivingEntityModCap implements ILivingEntityModCap
     public void synchronise()
     {
         if (entity == null) return;
-        World world = entity.world;
-        if (world.isRemote) return;
-        RegistryKey<World> dimension = world.getDimensionKey();
+        World world = entity.level;
+        if (world.isClientSide) return;
+        RegistryKey<World> dimension = world.dimension();
         PacketDispatcher.sendToDimension(new LivingEntityModCapSync(playId), dimension);
     }
 }

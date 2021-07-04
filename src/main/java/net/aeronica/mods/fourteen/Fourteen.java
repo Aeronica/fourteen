@@ -43,7 +43,7 @@ public class Fourteen
     private static final Logger LOGGER = LogManager.getLogger(Reference.MOD_ID);
     private static final ItemGroup MOD_TAB = new ItemGroup(Reference.MOD_ID) {
         @Override
-        public ItemStack createIcon() {
+        public ItemStack makeIcon() {
             return new ItemStack(ObjectHolders.MUSIC_BLOCK);
         }
     };
@@ -67,7 +67,7 @@ public class Fourteen
 
     private void clientSetup(final FMLClientSetupEvent event)
     {
-        ScreenManager.registerFactory(ObjectHolders.INV_TEST_CONTAINER, InvTestScreen::new);
+        ScreenManager.register(ObjectHolders.INV_TEST_CONTAINER, InvTestScreen::new);
         MinecraftForge.EVENT_BUS.register(KeyHandler.getInstance());
         MinecraftForge.EVENT_BUS.register(ClientAudio.class);
     }
@@ -87,30 +87,30 @@ public class Fourteen
         @SubscribeEvent
         public static void onBlocksRegistry(final RegistryEvent.Register<Block> blockRegistryEvent) {
             blockRegistryEvent.getRegistry().register(new MusicBlock().setRegistryName("music_block"));
-            blockRegistryEvent.getRegistry().register(new InvTestBlock(Block.Properties.create(Material.WOOD).hardnessAndResistance(1.5F)).setRegistryName("inv_test_block"));
+            blockRegistryEvent.getRegistry().register(new InvTestBlock(Block.Properties.of(Material.WOOD).strength(1.5F)).setRegistryName("inv_test_block"));
         }
 
         @SubscribeEvent
         public static void onItemsRegistry(final RegistryEvent.Register<Item> itemRegistryEvent)
         {
-            Item.Properties properties = new Item.Properties().maxStackSize(1).group(MOD_TAB);
+            Item.Properties properties = new Item.Properties().stacksTo(1).tab(MOD_TAB);
 
-            itemRegistryEvent.getRegistry().register(new BlockItem(ObjectHolders.MUSIC_BLOCK, new Item.Properties().maxStackSize(64).group(MOD_TAB)).setRegistryName("music_block"));
+            itemRegistryEvent.getRegistry().register(new BlockItem(ObjectHolders.MUSIC_BLOCK, new Item.Properties().stacksTo(64).tab(MOD_TAB)).setRegistryName("music_block"));
             itemRegistryEvent.getRegistry().register(new MusicItem(properties).setRegistryName("music_item"));
             itemRegistryEvent.getRegistry().register(new GuiTestItem(properties).setRegistryName("gui_test_item"));
-            itemRegistryEvent.getRegistry().register(new BlockItem(ObjectHolders.INV_TEST_BLOCK, new Item.Properties().maxStackSize(64).group(MOD_TAB)).setRegistryName("inv_test_block"));
+            itemRegistryEvent.getRegistry().register(new BlockItem(ObjectHolders.INV_TEST_BLOCK, new Item.Properties().stacksTo(64).tab(MOD_TAB)).setRegistryName("inv_test_block"));
         }
 
         @SubscribeEvent
         public static void registerContainers(RegistryEvent.Register<ContainerType<?>> event)
         {
-            event.getRegistry().register(IForgeContainerType.create((windowId, inv, data) -> new InvTestContainer(windowId, inv.player.world, data.readBlockPos(), inv, inv.player)).setRegistryName("inv_test_container"));
+            event.getRegistry().register(IForgeContainerType.create((windowId, inv, data) -> new InvTestContainer(windowId, inv.player.level, data.readBlockPos(), inv, inv.player)).setRegistryName("inv_test_container"));
         }
 
         @SubscribeEvent
         public static void registerTiles(RegistryEvent.Register<TileEntityType<?>> event)
         {
-            event.getRegistry().register(TileEntityType.Builder.create(InvTestTile::new, ObjectHolders.INV_TEST_BLOCK).build(AntiNull.nonNullInjected()).setRegistryName("inv_test_tile"));
+            event.getRegistry().register(TileEntityType.Builder.of(InvTestTile::new, ObjectHolders.INV_TEST_BLOCK).build(AntiNull.nonNullInjected()).setRegistryName("inv_test_tile"));
         }
     }
 

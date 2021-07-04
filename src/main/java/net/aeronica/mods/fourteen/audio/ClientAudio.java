@@ -66,7 +66,7 @@ public class ClientAudio
         if (soundHandler == null || soundEngine == null)
         {
             soundEngine = se;
-            soundHandler = soundEngine.sndHandler;
+            soundHandler = soundEngine.soundManager;
         }
     }
 
@@ -147,7 +147,7 @@ public class ClientAudio
 
     public static void playLocal(int playId, String musicText, @Nullable IAudioStatusCallback callback)
     {
-        play(playId, mc.player.getPosition(), musicText, true, callback);
+        play(playId, mc.player.blockPosition(), musicText, true, callback);
     }
 
 
@@ -175,9 +175,9 @@ public class ClientAudio
                 return;
             }
             if (isClient)
-                mc.getSoundHandler().play(new MusicClient(audioData));
+                mc.getSoundManager().play(new MusicClient(audioData));
             else
-                mc.getSoundHandler().play(new MusicPositioned(audioData));
+                mc.getSoundManager().play(new MusicPositioned(audioData));
             executorService.execute(new ThreadedPlay(audioData, musicText));
         } else
         {
@@ -220,19 +220,19 @@ public class ClientAudio
 
     // SoundEngine
     // private final Map<ISound, ChannelManager.Entry> playingSoundsChannel = Maps.newHashMap(); // AT this so we can attach the PCM the audio stream
-    // private final Multimap<SoundCategory, ISound> field_217943_n = HashMultimap.create(); // AT this for monitoring our ISounds
+    // private final Multimap<SoundCategory, ISound> instanceBySource = HashMultimap.create(); // AT this for monitoring our ISounds
     // private final List<ITickableSound> tickableSounds = Lists.newArrayList(); // AT this for monitoring
     //
 
-    //    this.audioStreamManager.func_217917_b(sound.getSoundAsOggLocation()).thenAccept((p_217928_1_) -> {
+    //    this.audioStreamManager.getStream(sound.getSoundAsOggLocation()).thenAccept((p_217928_1_) -> {
     //        channelmanager$entry.runOnSoundExecutor((p_217935_1_) -> {
-    //            p_217935_1_.func_216433_a(p_217928_1_);
-    //            p_217935_1_.func_216438_c();
+    //            p_217935_1_.attachBufferStream(p_217928_1_);
+    //            p_217935_1_.play();
     //            net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.client.event.sound.PlayStreamingSourceEvent(this, isound, p_217935_1_));
     //        });
     //    });
 
-    //    public CompletableFuture<IAudioStream> func_217917_b(ResourceLocation p_217917_1_) {
+    //    public CompletableFuture<IAudioStream> getStream(ResourceLocation p_217917_1_) {
     //        return CompletableFuture.supplyAsync(() -> {
     //            try {
     //                IResource iresource = this.resourceManager.getResource(p_217917_1_);
@@ -252,7 +252,7 @@ public class ClientAudio
      */
     private static CompletableFuture<IAudioStream> submitStream(AudioData audioData)
     {
-        return CompletableFuture.supplyAsync(() -> new PCMAudioStream(audioData), Util.getServerExecutor());
+        return CompletableFuture.supplyAsync(() -> new PCMAudioStream(audioData), Util.backgroundExecutor());
     }
 
     /**
@@ -262,22 +262,22 @@ public class ClientAudio
     {
         if (soundEngine != null && soundHandler != null && peekPlayIDQueue01() != PlayIdSupplier.INVALID)
         {
-            synchronized (soundEngine.playingSoundsChannel)
+            synchronized (soundEngine.instanceToChannel)
             {
                 AudioData audioData = getAudioData(pollPlayIDQueue01());
                 if (audioData.getISound() != null)
                 {
                     ISound sound = audioData.getISound();
-                    ChannelManager.Entry entry = soundEngine.playingSoundsChannel.get(sound);
+                    ChannelManager.Entry entry = soundEngine.instanceToChannel.get(sound);
                     if (entry != null)
                     {
-                        submitStream(audioData).thenAccept(iAudioStream -> entry.runOnSoundExecutor(soundSource ->
+                        submitStream(audioData).thenAccept(iAudioStream -> entry.execute(soundSource ->
                             {
-                                soundSource.playStreamableSounds(iAudioStream);
+                                soundSource.attachBufferStream(iAudioStream);
                                 soundSource.play();
                             }));
                         int playId = audioData.getPlayId();
-                        LOGGER.debug("initializeCodec: PlayID {}, ISound {}", playId, sound.getSoundLocation());
+                        LOGGER.debug("initializeCodec: PlayID {}, ISound {}", playId, sound.getLocation());
                     }
                     else
                     {
@@ -309,7 +309,7 @@ public class ClientAudio
             {
                 AudioData audioData = entry.getValue();
                 Status status = audioData.getStatus();
-                if (status == Status.ERROR || status == Status.DONE || !soundEngine.playingSoundsChannel.containsKey(audioData.getISound()))
+                if (status == Status.ERROR || status == Status.DONE || !soundEngine.instanceToChannel.containsKey(audioData.getISound()))
                 {
                     // Stopping playing audio takes 100 milliseconds. e.g. SoundSystem fadeOut(<source>, <delay in ms>)
                     // To prevent audio clicks/pops we have the wait at least that amount of time
@@ -368,7 +368,7 @@ public class ClientAudio
     @SubscribeEvent
     public static void event(SoundEvent.SoundSourceEvent event)
     {
-        if (event.getSound().getSoundLocation().equals(ModSoundEvents.PCM_PROXY.getRegistryName()))
+        if (event.getSound().getLocation().equals(ModSoundEvents.PCM_PROXY.getRegistryName()))
             LOGGER.debug("SoundSourceEvent", event.getName());
     }
 
@@ -382,7 +382,7 @@ public class ClientAudio
     @SubscribeEvent
     public static void event(PlayStreamingSourceEvent event)
     {
-        if (event.getSound().getSoundLocation().equals(ModSoundEvents.PCM_PROXY.getRegistryName()))
+        if (event.getSound().getLocation().equals(ModSoundEvents.PCM_PROXY.getRegistryName()))
         {
             // This will never get called since the consumer of the stream disqualifies non-ogg sound resources.
             LOGGER.debug("pcm-proxy PlayStreamingSourceEvent");

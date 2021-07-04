@@ -2,17 +2,19 @@ package net.aeronica.mods.fourteen.audio;
 
 import net.minecraft.util.SoundCategory;
 
+import net.minecraft.client.audio.ISound.AttenuationType;
+
 public class MusicClient extends MxSound
 {
 
     MusicClient(AudioData audioData)
     {
         super(audioData, SoundCategory.MUSIC);
-        this.attenuationType = AttenuationType.NONE;
+        this.attenuation = AttenuationType.NONE;
     }
 
     @Override
-    public boolean isGlobal()
+    public boolean isRelative()
     {
         return true;
     }

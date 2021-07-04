@@ -29,11 +29,11 @@ public class MusicItem extends Item
 
     @Nonnull
     @Override
-    public ActionResult<ItemStack> onItemRightClick(@Nonnull World worldIn, @Nonnull PlayerEntity playerIn, @Nonnull Hand handIn)
+    public ActionResult<ItemStack> use(@Nonnull World worldIn, @Nonnull PlayerEntity playerIn, @Nonnull Hand handIn)
     {
-        if (!worldIn.isRemote)
+        if (!worldIn.isClientSide)
         {
-            if (!playerIn.isSneaking())
+            if (!playerIn.isShiftKeyDown())
                 LivingEntityModCapProvider.getLivingEntityModCap(playerIn).ifPresent(livingCap -> {
                     livingCap.setPlayId((int) worldIn.getDayTime());
                 });
@@ -42,7 +42,7 @@ public class MusicItem extends Item
                 LivingEntityModCapProvider.getLivingEntityModCap(playerIn).ifPresent(ILivingEntityModCap::synchronise);
             }
 
-        } else if (!playerIn.isSneaking())
+        } else if (!playerIn.isShiftKeyDown())
         {
             int newPlayId = PlayIdSupplier.PlayType.BACKGROUND.getAsInt();
             lastPlayID = newPlayId;
@@ -51,7 +51,7 @@ public class MusicItem extends Item
         {
             ClientAudio.stop(lastPlayID);
         }
-        return super.onItemRightClick(worldIn, playerIn, handIn);
+        return super.use(worldIn, playerIn, handIn);
     }
 
     private String getRandomMML()

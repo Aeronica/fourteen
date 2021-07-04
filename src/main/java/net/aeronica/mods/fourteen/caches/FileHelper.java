@@ -74,7 +74,7 @@ public class FileHelper
         // The top level "world" save folder a.k.a. the "Over World"
         //.getActiveAnvilConverter().getFile(server.getFolderName(), "serverconfig").toPath();
         //File chunkDir = server.getActiveAnvilConverter().getFile(server.getFolderName(), "");
-        File chunkDir = server.getDataDirectory();
+        File chunkDir = server.getServerDirectory();
         serverWorldFolder = Paths.get(chunkDir.getPath());
         LOGGER.debug("FileHelper: serverWorldFolder {}", serverWorldFolder.toString());
     }
@@ -142,7 +142,7 @@ public class FileHelper
     @OnlyIn(Dist.CLIENT)
     public static void openFolder(String folder)
     {
-        Util.getOSType().openFile(getDirectory(folder, LogicalSide.CLIENT).toFile());
+        Util.getPlatform().openFile(getDirectory(folder, LogicalSide.CLIENT).toFile());
     }
 
     /**
