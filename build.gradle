@@ -60,8 +60,7 @@ minecraft {
             ideaModule "${project.name}.main"
 
             // program arguments
-            args '--username', project.findProperty('net.aeronica.mc.logon')
-            args '--password', project.findProperty('net.aeronica.mc.password')
+            args '--username', 'Player01'
 
 //            environment 'MOD_CLASSES', "${project.file("out/production/resources").canonicalPath};${project.file("out/production/classes").canonicalPath}"
             mods {
