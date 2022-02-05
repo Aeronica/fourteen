@@ -1,0 +1,13 @@
+{
+  "package": "net.aeronica.mods.fourteen.mixins",
+  "required": true,
+  "refmap": "mixins.sixteen.refmap.json",
+  "target": "@env(DEFAULT)",
+  "minVersion": "0.8",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+  ],
+  "client": [
+    "MixinDebugRenderer"
+  ]
+}
