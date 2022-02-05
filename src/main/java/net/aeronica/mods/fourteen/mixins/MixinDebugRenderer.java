@@ -23,7 +23,7 @@ public class MixinDebugRenderer
      * @param pCamZ         The camera Z position
      * @param ci            Ignored
      */
-    @Inject(method = "render(Lcom/mojang/blaze3d/matrix/MatrixStack;Lnet/minecraft/client/renderer/IRenderTypeBuffer$Impl;DDD)V", at = @At("HEAD"))
+    @Inject(method = "render(Lcom/mojang/blaze3d/matrix/MatrixStack;Lnet/minecraft/client/renderer/IRenderTypeBuffer$Impl;DDD)V", at = @At("RETURN"))
     public void renderCallback(MatrixStack pMatrixStack, IRenderTypeBuffer.Impl pBuffer, double pCamX, double pCamY, double pCamZ, CallbackInfo ci)
     {
         RenderHandler.renderLast(pMatrixStack, pBuffer, pCamX, pCamY, pCamZ);
