@@ -1,4 +1,4 @@
-package net.aeronica.mods.fourteen.network;
+package net.aeronica.mods.fourteen.network.messages;
 
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -7,27 +7,32 @@ import java.util.function.Supplier;
 
 import static net.aeronica.mods.fourteen.gui.Handler.openTestScreen;
 
-public class OpenScreenMessage
+public class OpenScreenMessage extends AbstractMessage<OpenScreenMessage>
 {
     private final SM screen;
+
+    public OpenScreenMessage()
+    {
+        this(null);
+    }
 
     public OpenScreenMessage(SM screen)
     {
         this.screen = screen;
     }
 
-    public static OpenScreenMessage decode(final PacketBuffer buffer)
+    public OpenScreenMessage decode(final PacketBuffer buffer)
     {
         final SM screen = buffer.readEnum(SM.class);
         return new OpenScreenMessage(screen);
     }
 
-    public static void encode(final OpenScreenMessage message, final PacketBuffer buffer)
+    public void encode(final OpenScreenMessage message, final PacketBuffer buffer)
     {
         buffer.writeEnum(message.screen);
     }
 
-    public static void handle(final OpenScreenMessage message, final Supplier<NetworkEvent.Context> ctx)
+    public void handle(final OpenScreenMessage message, final Supplier<NetworkEvent.Context> ctx)
     {
         if (ctx.get().getDirection().getReceptionSide().isClient())
             ctx.get().enqueueWork(() ->

@@ -1,8 +1,8 @@
 package net.aeronica.mods.fourteen.caps;
 
 import net.aeronica.mods.fourteen.managers.PlayIdSupplier;
-import net.aeronica.mods.fourteen.network.LivingEntityModCapSync;
 import net.aeronica.mods.fourteen.network.PacketDispatcher;
+import net.aeronica.mods.fourteen.network.messages.LivingEntityModCapSync;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.RegistryKey;
 import net.minecraft.world.World;

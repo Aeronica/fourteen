@@ -14,8 +14,9 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package net.aeronica.mods.fourteen.network;
+package net.aeronica.mods.fourteen.network.messages;
 
+import net.aeronica.mods.fourteen.network.PacketDispatcher;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -27,25 +28,30 @@ import java.util.function.Supplier;
 
 import static net.aeronica.mods.fourteen.gui.Handler.openTestScreen;
 
-public class SendKeyMessage
+public class SendKeyMessage extends AbstractMessage<SendKeyMessage>
 {
     private static final Logger LOGGER = LogManager.getLogger();
     private final String keyBindingDesc;
 
+    public SendKeyMessage()
+    {
+        this("");
+    }
+
     public SendKeyMessage(final String kb) { this.keyBindingDesc = kb; }
 
-    public static SendKeyMessage decode(final PacketBuffer buffer)
+    public SendKeyMessage decode(final PacketBuffer buffer)
     {
         String keyBindingDesc = buffer.readUtf(64);
         return new SendKeyMessage(keyBindingDesc);
     }
 
-    public static void encode(final SendKeyMessage message, final PacketBuffer buffer)
+    public void encode(final SendKeyMessage message, final PacketBuffer buffer)
     {
         buffer.writeUtf(message.keyBindingDesc, 64);
     }
 
-    public static void handle(final SendKeyMessage message, final Supplier<NetworkEvent.Context> ctx)
+    public void handle(final SendKeyMessage message, final Supplier<NetworkEvent.Context> ctx)
     {
         ServerPlayerEntity player = ctx.get().getSender();
         if (ctx.get().getDirection().getReceptionSide().isClient())
