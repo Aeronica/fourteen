@@ -36,23 +36,16 @@ public class RenderHandler
 
         ServerStageAreaProvider.getServerStageAreas(level).ifPresent(
                 areas -> {
-                    areas.getStageAreas().forEach(
+                    areas.getStageAreas().stream().filter(area-> pClippingHelper.isVisible(area.getAreaAABB())).forEach(
                             (area) -> {
                                 IVertexBuilder vertexBuilder1 = pBuffer.getBuffer(RenderType.lightning());
                                 StageAreaRenderer.renderFaces(pMatrixStack, vertexBuilder1, area.getAreaAABB(), camX, camY, camZ, 1F, 0F, 1F, 0.1F);
-                            });
 
-                    areas.getStageAreas().forEach(
-                            (area) ->
-                            {
+
                                 IVertexBuilder vertexBuilder2 = pBuffer.getBuffer(RenderType.lines());
                                 VoxelShape cubeShape = VoxelShapes.create(area.getAreaAABB());
                                 StageAreaRenderer.renderEdges(pMatrixStack, vertexBuilder2, cubeShape, camX, camY, camZ, 1F, 0F, 1F, 1F);
-                            });
 
-                    areas.getStageAreas().forEach(
-                            (area) ->
-                            {
                                 StageAreaRenderer.renderFloatingText(new StringTextComponent(area.getTitle()),
                                                                      area.getAreaAABB().getCenter(),
                                                                      pMatrixStack,
