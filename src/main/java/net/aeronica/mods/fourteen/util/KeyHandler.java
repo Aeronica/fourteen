@@ -18,7 +18,7 @@ package net.aeronica.mods.fourteen.util;
 
 import net.aeronica.mods.fourteen.Reference;
 import net.aeronica.mods.fourteen.network.PacketDispatcher;
-import net.aeronica.mods.fourteen.network.SendKeyMessage;
+import net.aeronica.mods.fourteen.network.messages.SendKeyMessage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.client.event.InputEvent;

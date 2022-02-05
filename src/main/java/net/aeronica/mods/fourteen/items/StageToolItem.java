@@ -1,9 +1,8 @@
 package net.aeronica.mods.fourteen.items;
 
-import net.aeronica.mods.fourteen.network.PacketDispatcher;
-import net.aeronica.mods.fourteen.network.messages.OpenScreenMessage;
+import net.aeronica.mods.fourteen.caps.LivingEntityModCapProvider;
+import net.aeronica.mods.fourteen.caps.stages.ServerStageAreaProvider;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
@@ -16,10 +15,10 @@ import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 
-public class GuiTestItem extends Item
+public class StageToolItem extends Item
 {
     private static final Logger LOGGER = LogManager.getLogger();
-    public GuiTestItem(Item.Properties properties)
+    public StageToolItem(Properties properties)
     {
         super(properties);
     }
@@ -32,11 +31,18 @@ public class GuiTestItem extends Item
         {
             if (!playerIn.isShiftKeyDown())
             {
-                PacketDispatcher.sendTo(new OpenScreenMessage(OpenScreenMessage.SM.TEST_ONE), (ServerPlayerEntity) playerIn);
+                //PacketDispatcher.sendTo(new OpenScreenMessage(OpenScreenMessage.SM.TEST_ONE), (ServerPlayerEntity) playerIn);
+                ServerStageAreaProvider.getServerStageAreas(worldIn).ifPresent(p->{
+                    p.test();
+                    p.setInt(worldIn.getRandom().nextInt(10));
+                });
+                LivingEntityModCapProvider.getLivingEntityModCap(playerIn).ifPresent(p->{
+                    p.setPlayId(worldIn.getRandom().nextInt(10));
+                });
             }
             else
             {
-                // nop
+                //PacketDispatcher.sendTo(new OpenScreenMessage(OpenScreenMessage.SM.TEST_TWO), (ServerPlayerEntity) playerIn);
             }
 
         } else if (!playerIn.isShiftKeyDown())
@@ -44,7 +50,11 @@ public class GuiTestItem extends Item
             // nop
         } else
         {
-            // nop
+            LivingEntityModCapProvider.getLivingEntityModCap(playerIn).ifPresent(p->{
+                ServerStageAreaProvider.getServerStageAreas(worldIn).ifPresent(n->{
+                    LOGGER.debug("playId: {}, someInt: {}", p.getPlayId(), n.getInt());
+                });
+            });
         }
         return super.use(worldIn, playerIn, handIn);
     }

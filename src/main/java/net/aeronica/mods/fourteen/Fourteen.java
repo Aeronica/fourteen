@@ -4,9 +4,11 @@ import net.aeronica.mods.fourteen.audio.ClientAudio;
 import net.aeronica.mods.fourteen.blocks.*;
 import net.aeronica.mods.fourteen.caches.FileHelper;
 import net.aeronica.mods.fourteen.caps.LivingEntityModCapProvider;
+import net.aeronica.mods.fourteen.caps.stages.ServerStageAreaProvider;
 import net.aeronica.mods.fourteen.config.FourteenConfig;
 import net.aeronica.mods.fourteen.items.GuiTestItem;
 import net.aeronica.mods.fourteen.items.MusicItem;
+import net.aeronica.mods.fourteen.items.StageToolItem;
 import net.aeronica.mods.fourteen.network.PacketDispatcher;
 import net.aeronica.mods.fourteen.util.AntiNull;
 import net.aeronica.mods.fourteen.util.KeyHandler;
@@ -63,6 +65,7 @@ public class Fourteen
     {
         PacketDispatcher.register();
         LivingEntityModCapProvider.register();
+        ServerStageAreaProvider.register();
     }
 
     private void clientSetup(final FMLClientSetupEvent event)
@@ -98,6 +101,7 @@ public class Fourteen
             itemRegistryEvent.getRegistry().register(new BlockItem(ObjectHolders.MUSIC_BLOCK, new Item.Properties().stacksTo(64).tab(MOD_TAB)).setRegistryName("music_block"));
             itemRegistryEvent.getRegistry().register(new MusicItem(properties).setRegistryName("music_item"));
             itemRegistryEvent.getRegistry().register(new GuiTestItem(properties).setRegistryName("gui_test_item"));
+            itemRegistryEvent.getRegistry().register(new StageToolItem(properties).setRegistryName("stage_tool"));
             itemRegistryEvent.getRegistry().register(new BlockItem(ObjectHolders.INV_TEST_BLOCK, new Item.Properties().stacksTo(64).tab(MOD_TAB)).setRegistryName("inv_test_block"));
         }
 
